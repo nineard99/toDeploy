@@ -29,6 +29,24 @@
                 break;
         }
     }
+    //check score
+    
+    function checkScore(score){
+         if(score > 21 ){
+            return 'Bust'
+        }else if(score === 21){
+            return 'BlackJack'
+        }
+    }
+    function compareScore(player, dealer){
+        if(player === dealer){
+            return 'Draw'
+        }else if(player > dealer){
+            return 'Player Win'
+        }else if(player < dealer){
+            return "Player Lose"
+        }
+    }
 </script>
 
 <template>
@@ -45,6 +63,10 @@
                 <div style="padding: 10px; rotate: 180deg; align-items: end;"><img :src="`../symbolDeckImage/${card.symbols}.png`" style="width:25px;"></div>
             </div>
         </div>
+    </div>
+    <div >
+       {{ checkScore(25) }}
+          
     </div>
 </template>
 
