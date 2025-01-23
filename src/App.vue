@@ -29,22 +29,21 @@
                 break;
         }
     }
-    //check score
-    
-    function checkScore(score){
-         if(score > 21 ){
-            return 'Bust'
-        }else if(score === 21){
-            return 'BlackJack'
-        }
-    }
-    function compareScore(player, dealer){
-        if(player === dealer){
-            return 'Draw'
+   
+    //Check BlackJack Player
+    //Check Dealer Below 17
+    //Check The Final Score 
+    function checkScore(player, dealer){
+        if(player > 21){
+            return "You Bust"
+        }else if(dealer > 21){
+            return "You Win"
+        }else if(player === dealer){
+            return "Draw"
         }else if(player > dealer){
-            return 'Player Win'
+            return "You Win"
         }else if(player < dealer){
-            return "Player Lose"
+            return "You Lose"
         }
     }
 </script>
@@ -65,7 +64,8 @@
         </div>
     </div>
     <div >
-       {{ checkScore(25) }}
+       <!-- check score function -->
+       {{ checkScore(32,21) }}
           
     </div>
 </template>
