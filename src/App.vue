@@ -46,6 +46,15 @@
             return "You Lose"
         }
     }
+
+    const player = {
+        balance: 1000,
+        highScore: 0,
+        hands:[] //Work in progress with split option
+    }
+
+    
+    
 </script>
 
 <template>
@@ -66,8 +75,24 @@
     <div >
        <!-- check score function -->
        {{ checkScore(32,21) }}
-          
+
     </div>
+
+    <!-- display player's balance and high score -->
+    <div v-show="false" class="flex flex-col items-center gap-3 p-5 bg-gray-100 rounded-lg max-w-xs">
+    <!-- display player's balance -->
+        <div class="w-50 p-3 bg-green-100 rounded-lg">
+            <span class="text-lg font-bold text-green-800">Your balance:</span>
+            <span class="text-lg font-bold text-green-600"> ${{player.balance}} </span>
+        </div>
+
+        <!-- display player's high score -->
+        <div class="w-50 p-3 bg-blue-100 rounded-lg">
+            <span class="text-lg font-bold text-blue-800">High Score: </span>
+            <span class="text-lg font-bold text-blue-600"> {{player.highScore}}</span>
+        </div>
+    </div>
+
 </template>
 
 <style scoped>
