@@ -60,13 +60,27 @@
         hands:[] //Work in progress with split option
     }
 
+    const usedCards=[]
+    function randomCard() {
+        let randNum=Math.ceil(Math.random()*52)-1
+        while (usedCards.includes(randNum)) {
+            randNum=Math.ceil(Math.random()*52)-1
+        }
+        usedCards.push(randNum)
+        return usedCards[usedCards.length-1]
+    }   
+
+    function addCardToHand(handHolder){
+        handHolder.hands.push(arrDeck[randomCard()])
+        return handHolder.hands
+    }
     
     
 </script>
 
 <template>
     <div class="test flex-col">
-        <div id="deck" v-show="true" class="grid grid-cols-12 gap-4">
+        <div id="deck" v-show="false" class="grid grid-cols-12 gap-4">
             <div v-for="card in arrDeck">
                 <div v-if="card.symbols=='club'||card.symbols=='spade'" class="w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-stone-100 flex flex-col justify-between">
                     <div style="padding: 10px;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
@@ -80,7 +94,6 @@
                 </div>
             </div>
         </div>
-
         <!-- display player's balance and high score -->
         <div v-show="false" class="flex flex-col items-center gap-3 p-5 bg-gray-100 rounded-lg max-w-xs">
         <!-- display player's balance -->
@@ -125,6 +138,7 @@
                 <div class="h-[40%] ">
                     <div class="px-4 py-1 hoverzoom w-[9rem] mt-3 flex justify-center bg-black/50 rounded-full border border-yellow-500/30 backdrop-blur">
                         <h2 class="text-xl font-bold text-yellow-500">Player (21)</h2>
+
                     </div>
                 </div>
             </div>
