@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 .test{
-    @apply w-full flex flex-col items-center justify-center h-screen bg-gray-800
+    /* @apply w-full flex flex-col items-center justify-center h-screen bg-gray-800 */
+    @apply w-full bg-gray-800
 }
 
 

@@ -76,21 +76,18 @@
 </script>
 
 <template>
-    <div class="test flex-col">
-        <div id="deck" v-show="false" class="grid grid-cols-12 gap-4">
-            <div v-for="card in arrDeck">
-                <div v-if="card.symbols=='club'||card.symbols=='spade'" class="w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-stone-100 flex flex-col justify-between">
-                    <div style="padding: 10px;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                    <div style="text-align: center; font-size: 70px; color: #282828;font-family: Oldenburg;">{{ card.number }}</div>
-                    <div style="padding: 10px; rotate: 180deg; align-items: end;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                </div>
-                <div v-else="card.symbols=='diamond'||card.symbols=='heart'" class="w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-rose-50 flex flex-col justify-between">
-                    <div style="padding: 10px;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                    <div style="text-align: center; font-size: 70px; color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
-                    <div style="padding: 10px; rotate: 180deg; align-items: end;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                </div>
+    <div id="deck" v-show="false" class="grid grid-cols-12 gap-4">
+        <div v-for="card in arrDeck">
+            <div :class="`w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-${card.color} flex flex-col justify-between`">
+                <div class="p-2"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
+                <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
+                <div v-else class="text-center text-7xl" style="color:#282828;font-family: Oldenburg;">{{ card.number }}</div>
+                <div class="p-2 rotate-180"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
             </div>
         </div>
+    </div>   
+
+    <div class="test">
         <!-- display player's balance and high score -->
         <div v-show="false" class="flex flex-col items-center gap-3 p-5 bg-gray-100 rounded-lg max-w-xs">
         <!-- display player's balance -->
@@ -107,7 +104,7 @@
         </div>
 
         <!-- Before StartGame -->
-        <div v-show="!startGame" class="flex flex-col justify-center items-center">
+        <div v-show="!startGame" class="h-screen flex flex-col justify-center items-center">
             <div class="text-center mb-2">
                 <p class="text-4xl font-extrabold text-yellow-500 tracking-wide drop-shadow-md animate-bounce  ">
                     INFINITY BLACKJACK
@@ -122,28 +119,63 @@
                 PLAY GAME
             </button>         
         </div>
-        <div v-show="startGame" class="slide-down px-5 py-1 mb-10 hoverzoom flex justify-center items-center bg-black/50 rounded-full border border-yellow-500/30 backdrop-blur">
-            <h2 class="text-xl font-extrabold text-green-400 ">${{ player.balance }}</h2>
-        </div>
        
+
+        
+    </div>
+    
+    <div v-show="startGame" class="h-screen bg-gray-800 overflow-hidden">
+        <nav class="bg-black text-white py-4 px-4 border-b-4 border-yellow-600">
+            <div class="max-w-screen-xl mx-auto flex items-center justify-between">
+                <div class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <span class="self-center text-2xl text-white font-semibold whitespace-nowrap ">PeePhanan</span>
+                </div>
+                <div class="text-2xl font-bold hidden w-full md:flex md:w-auto ">BLACKJACK</div>
+
+                <div class="flex text-white md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                    <span class="self-center text-2xl text-white font-semibold whitespace-nowrap "><span class="text-sm text-stone-200 ">your balance </span>${{ player.balance }}</span>
+                </div>
+            </div>
+        </nav>
         <!-- StartGame Table -->
-        <div v-show="startGame" class="slide-up bg-cover flex items-center justify-center bg-center w-[80%] h-[70%] rounded-[3rem] border-4 border-yellow-350 shadow-xl" style="background-image: url('./Image/BackGround.jpg');" >
-            <div v-show="betToStartGame" class="h-[90%] w-[90%] flex flex-col ">
+        <div v-show="startGame" class="slide-up bg-cover flex justify-center bg-center w-full h-full shadow-xl" style="background-image: url('./Image/BackGround.jpg');" >
+            <div v-show="!betToStartGame" class="flex items-center">
+                <div class="max-w-sm p-6 border rounded-lg shadow-sm bg-gray-800 from-gray-800 to-black border-yellow-500">
+                    <div class="w-7 h-7 text-gray-400 mb-3">
+                        $
+                    </div>
+                    <div>
+                        <h5 class="mb-2 text-2xl font-semibold tracking-tight text-yellow-300">How much your first bet?</h5>
+                    </div>
+                    <form @submit.prevent="handleBetStartGame">
+                        <input 
+                            v-model="bet" 
+                            type="number" 
+                            min="1"  
+                            placeholder="ใส่จำนวนเดิมพัน"
+                            class="mb-3 font-normal mr-2 px-4 py-2 slide-right text-yellow-300 bg-gradient-to-r from-gray-800 to-black border border-yellow-500 rounded-lg shadow-sm placeholder-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition duration-300 ease-in-out"/>
+                        <button
+                            type="submit"
+                            class="px-6 py-3 text-lg font-bold slide-left text-yellow-300 bg-gradient-to-r from-black via-gray-800 to-black border border-yellow-500 rounded-lg shadow-md hover:shadow-yellow-500/50 hover:bg-yellow-500 hover:text-yellow-200 hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:border-red-500 disabled:cursor-not-allowed"
+                            :disabled="bet > player.balance"
+                            v-text="bet > player.balance ? 'เงินไม่พอ' : '🃏เริ่มเกม🃏'">
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div v-show="betToStartGame">
                 <div class="flex-1 flex flex-col items-center justify-center">
                     <div class="px-4 py-1 mt-3 hoverzoom w-[9rem] flex slide-left justify-center bg-black/50 rounded-full border border-yellow-500/30 backdrop-blur">
                         <h2 class="text-xl font-bold text-yellow-500 ">Dealer {{ dealer.handCount }}</h2>
                     </div>
                     <ul class="flex w-full items-center justify-center">
                         <li class="m-5" v-for="card in dealer.hands" :key="card.symbols + card.number ">
-                            <div v-if="card.symbols=='club'||card.symbols=='spade'" class="w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-stone-100 flex flex-col justify-between">
-                                <div style="padding: 10px;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                                <div style="text-align: center; font-size: 70px; color: #282828;font-family: Oldenburg;">{{ card.number }}</div>
-                                <div style="padding: 10px; rotate: 180deg; align-items: end;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                            </div>
-                            <div v-else="card.symbols=='diamond'||card.symbols=='heart'" class="w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-rose-50 flex flex-col justify-between">
-                                <div style="padding: 10px;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                                <div style="text-align: center; font-size: 70px; color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
-                                <div style="padding: 10px; rotate: 180deg; align-items: end;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
+                            <div :class="`w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-${card.color} flex flex-col justify-between`">
+                                <div class="p-2"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
+                                <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
+                                <div v-else class="text-center text-7xl" style="color:#282828;font-family: Oldenburg;">{{ card.number }}</div>
+                                <div class="p-2 rotate-180"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
                             </div>
                         </li>
                         <li v-show="!DealerPlay">
@@ -163,58 +195,58 @@
                     </div>
                     <ul class="flex w-full items-center justify-center">
                         <li class="m-5" v-for="card in player.hands" :key="card.symbols + card.number ">
-                            <div v-if="card.symbols=='club'||card.symbols=='spade'" class="w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-stone-100 flex flex-col justify-between">
-                                <div style="padding: 10px;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                                <div style="text-align: center; font-size: 70px; color: #282828;font-family: Oldenburg;">{{ card.number }}</div>
-                                <div style="padding: 10px; rotate: 180deg; align-items: end;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                            </div>
-                            <div v-else="card.symbols=='diamond'||card.symbols=='heart'" class="w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-rose-50 flex flex-col justify-between">
-                                <div style="padding: 10px;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                                <div style="text-align: center; font-size: 70px; color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
-                                <div style="padding: 10px; rotate: 180deg; align-items: end;"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
+                            <div :class="`w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-${card.color} flex flex-col justify-between`">
+                                <div class="p-2"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
+                                <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
+                                <div v-else class="text-center text-7xl" style="color:#282828;font-family: Oldenburg;">{{ card.number }}</div>
+                                <div class="p-2 rotate-180"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
                             </div>
                         </li>
                     </ul>
-                    <!-- ปุ่มควบคุม -->
-                    <div v-show="!DealerPlay" class="flex items-center justify-center mt-4 gap-4">
-                        <button 
-                            class="px-6 py-2 text-lg font-bold text-white bg-green-500 rounded-lg hover:bg-green-400 transition"
-                            @click="handleHit">
-                            Hit
-                        </button>
-                        <button 
-                            class="px-6 py-2 text-lg font-bold text-white bg-red-500 rounded-lg hover:bg-red-400 transition"
-                            @click="handleStand">
-                            Stand
-                        </button>
-                        <button 
-                            class="px-6 py-2 text-lg font-bold text-white bg-yellow-500 rounded-lg hover:bg-yellow-400 transition"
-                            :disabled="bet * 2 > player.balance"
-                            @click="handleDouble">
-                            Double
-                        </button>
-                    </div>
                 </div>
             </div>
-            <div v-show="!betToStartGame">
-                <form @submit.prevent="handleBetStartGame">
-                    <input 
-                        v-model="bet" 
-                        type="number" 
-                        min="1"  
-                        placeholder="ใส่จำนวนเดิมพัน"
-                        class="mr-2 px-4 py-2 slide-right text-yellow-300 bg-gradient-to-r from-gray-800 to-black border border-yellow-500 rounded-lg shadow-sm placeholder-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition duration-300 ease-in-out"/>
-                    <button
-                        type="submit"
-                        class="px-6 py-3 text-lg font-bold slide-left text-yellow-300 bg-gradient-to-r from-black via-gray-800 to-black border border-yellow-500 rounded-lg shadow-md hover:shadow-yellow-500/50 hover:bg-yellow-500 hover:text-yellow-200 hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:border-red-500 disabled:cursor-not-allowed"
-                        :disabled="bet > player.balance"
-                        v-text="bet > player.balance ? 'เงินไม่พอ' : '🃏เริ่มเกม🃏'">
-                    </button>
-                </form>
+        </div>        
+        <!-- footer -->
+        <div v-show="betToStartGame" class="relative bg-green-500">
+            <div class="absolute bottom-20 left-5 text-white">
+                <p>${{ bet }}</p>
+                <p class="text-xl">TOTAL BET</p>
             </div>
-
-        </div>
+            <div class="absolute bottom-20 right-5 text-white">
+                <!-- ปุ่มควบคุม -->
+                <div v-show="!DealerPlay" class="flex items-center justify-center mt-4 gap-4 w-full">
+                    <button 
+                        class="px-6 py-2 text-lg font-bold text-white bg-green-600 rounded-lg hover:bg-green-400 transition"
+                        @click="handleHit">
+                        <div class="relative flex flex-col items-center">
+                            <img class="size-16 p-1 drop-shadow-md" src="../Image/hit.png">
+                            <span class="text-sm font-bold absolute bottom-[-18px] bg-green-500 text-white px-3 py-1 rounded-lg shadow-md border border-green-700">Hit</span>
+                        </div>
+                    </button>
+                    <button 
+                        class="px-6 py-2 text-lg font-bold text-white bg-red-600 rounded-lg hover:bg-red-400 transition"
+                        @click="handleStand">
+                        <div class="relative flex flex-col items-center">
+                            <img class="size-16 p-1 drop-shadow-md" src="../Image/stand.png">
+                            <span class="text-sm font-bold absolute bottom-[-18px] bg-red-500 text-white px-3 py-1 rounded-lg shadow-md border border-green-700">Stand</span>
+                        </div>
+                    </button>
+                    <button 
+                        class="px-6 py-2 text-lg font-bold text-white bg-yellow-600 rounded-lg hover:bg-yellow-400 transition"
+                        :disabled="bet * 2 > player.balance"
+                        @click="handleDouble">
+                        <div class="relative flex flex-col items-center">
+                            <img class="size-16 p-1 drop-shadow-md" src="../Image/double.png">
+                            <span class="text-sm font-bold absolute bottom-[-18px] bg-yellow-500 text-white px-3 py-1 rounded-lg shadow-md border border-green-700">Double</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>    
     </div>
+
+
+
 </template>
 
 <style scoped>
