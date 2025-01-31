@@ -37,6 +37,8 @@
         event.preventDefault()
         console.log(bet.value)
         betToStartGame.value = true;
+        player.value.balance -= bet.value
+        console.log(player.balance)
         addCardToHand(player)
         addCardToHand(player)
         addCardToHand(dealer)
@@ -133,7 +135,7 @@
                 <div class="text-2xl font-bold hidden w-full md:flex md:w-auto ">BLACKJACK</div>
 
                 <div class="flex text-white md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <span class="self-center text-2xl text-white font-semibold whitespace-nowrap "><span class="text-sm text-stone-200 ">your balance </span>${{ player.balance }}</span>
+                    <span class="self-center text-2xl text-white font-semibold whitespace-nowrap "><span class="text-sm text-stone-200 ">Your balance </span>${{ player.balance }}</span>
                 </div>
             </div>
         </nav>
