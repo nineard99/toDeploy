@@ -1,38 +1,36 @@
 
 const arrDeck=[]
-const usedCards=[]
+let usedCards=[]
 
-
-    for (let i = 1; i <= 4; i++) {
-        let symbols
-        let color
-        switch (i) {
-            case 1:
-                symbols='club'
-                color='gray-100'
-                break;
-            case 2:
-                symbols='diamond'
-                color='rose-50'
-                break;
-            case 3:
-                symbols='heart'
-                color='rose-50'
-                break;
-            case 4:
-                symbols='spade'
-                color='gray-100'
-                break;
-        }
-        arrDeck.push({symbols:symbols,number:'K',values:10,color:color})
-        arrDeck.push({symbols:symbols,number:'Q',values:10,color:color})
-        arrDeck.push({symbols:symbols,number:'J',values:10,color:color})
-        for (let j = 10; j >= 2; j--) {
-            arrDeck.push({'symbols':symbols,'number':j,'values':j,color:color})
-        }
-        arrDeck.push({'symbols':symbols,'number':'A','values':1,color:color})
+for (let i = 1; i <= 4; i++) {
+    let symbols
+    let color
+    switch (i) {
+        case 1:
+            symbols='club'
+            color='gray-100'
+            break;
+        case 2:
+            symbols='diamond'
+            color='rose-50'
+            break;
+        case 3:
+            symbols='heart'
+            color='rose-50'
+            break;
+        case 4:
+            symbols='spade'
+            color='gray-100'
+            break;
     }
-
+    arrDeck.push({symbols:symbols,number:'K',values:10,color:color})
+    arrDeck.push({symbols:symbols,number:'Q',values:10,color:color})
+    arrDeck.push({symbols:symbols,number:'J',values:10,color:color})
+    for (let j = 10; j >= 2; j--) {
+        arrDeck.push({'symbols':symbols,'number':j,'values':j,color:color})
+    }
+    arrDeck.push({'symbols':symbols,'number':'A','values':1,color:color})
+}
 
 
 function randomCard() {
@@ -58,7 +56,11 @@ const countHand = (handHolder) => {
         return prev + curr.values;
     }, 0);
 }
+function newDeck(handHolder){
+    usedCards=[]
+    handHolder.value.hands=[]
+}
 
 
 
-export  {addCardToHand , randomCard , arrDeck}
+export  {addCardToHand, arrDeck, newDeck}

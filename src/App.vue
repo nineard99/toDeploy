@@ -1,6 +1,6 @@
 <script setup>
     import { ref , onMounted } from 'vue'
-    import {addCardToHand , randomCard , arrDeck} from './scripts/deck'
+    import {addCardToHand, arrDeck, newDeck} from './scripts/deck'
     const startGame = ref(false)
     const betToStartGame = ref(false)
     const bet = ref(0)
@@ -115,7 +115,10 @@
     }
      
     function resetGame(){
+        newDeck(player)
+        newDeck(dealer)
         betToStartGame.value = false
+        DealerPlay.value=false
     }
 
 </script>
