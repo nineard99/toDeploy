@@ -6,6 +6,7 @@
     const bet = ref(0)
     const DealerPlay = ref(false)
     let HiddenCardDealer = {}
+    const result  = ref("")
     const player = ref({
         balance: 1000,
         highScore: 0,
@@ -19,19 +20,20 @@
     //Check BlackJack Player
     //Check Dealer Below 17
     //Check The Final Score 
-    function checkScore(player, dealer){
-        if(player > 21){
-            return "You Bust"
-        }else if(dealer > 21){
-            return "You Win"
-        }else if(player === dealer){
-            return "Draw"
-        }else if(player > dealer){
-            return "You Win"
-        }else if(player < dealer){
-            return "You Lose"
+    function checkScore(){
+        if(dealer.value.handCount > 21){
+            return result.value = "You Win"
+        }else if(player.value.handCount === dealer.value.handCount){
+            return result.value = "Draw"
+        }else if(player.value.handCount > dealer.value.handCount){
+            return result.value = "You Win"
+        }else if(player.value.handCount < dealer.value.handCount){
+            return result.value = "You Lose"
         }
     }
+
+
+    
 
     const handleBetStartGame = (event) => {
         event.preventDefault()
@@ -48,7 +50,13 @@
     }
     function handleHit(){
         addCardToHand(player)
+        if(player.value.handCount > 21){
+            DealerPlay.value = true
+            return result.value = "You Lose"
+        }
     }
+   
+    
 
     function handleStand(){
         DealerPlay.value = true
@@ -58,9 +66,13 @@
     }
     function handleDouble(){
         addCardToHand(player)
-        DealerPlay.value = true
-        dealer.value.hands.push(HiddenCardDealer)
-        dealerControll()
+        if(player.value.handCount > 21){
+            return result.value = "You Lose"
+        }else {
+            DealerPlay.value = true
+            dealer.value.hands.push(HiddenCardDealer)
+            dealerControll()
+        }
     }
 
     function dealerControll() {
@@ -69,10 +81,17 @@
                 if (dealer.value.handCount < 18) {
                     addCardToHand(dealer); 
                     setTimeout(addCardWithDelay, 1000);
+                }else {
+                    checkScore();
                 }
             }
             addCardWithDelay();
         }, 1000); 
+    }
+     
+    function resetGame(){
+        
+        betToStartGame.value = false
     }
 
 </script>
@@ -167,6 +186,23 @@
             </div>
 
             <div v-show="betToStartGame">
+                <h1 class="mb-2 mt-6 text-3xl font-bold tracking-wide text-red-400 
+                        bg-gradient-to-b from-yellow-300 to-yellow-500 
+                        shadow-lg shadow-yellow-500/50 
+                        border-2 border-yellow-500 
+                        px-6 py-3 rounded-lg"
+                        v-show="result.length > 0">
+                        {{ result }}
+                    </h1>
+                    <button
+                            type="submit"
+                            class="px-6 py-3 text-lg font-bold slide-left text-yellow-300 bg-gradient-to-r from-black via-gray-800 to-black border border-yellow-500 rounded-lg shadow-md hover:shadow-yellow-500/50 hover:bg-yellow-500 hover:text-yellow-200 hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:border-red-500 disabled:cursor-not-allowed"
+                            v-show="result.length > 0"
+                            v-text="'Retry'"
+                            @click="resetGame">
+
+                    </button>
+                    
                 <div class="flex-1 flex flex-col items-center justify-center">
                     <div class="px-4 py-1 mt-3 hoverzoom w-[9rem] flex slide-left justify-center bg-black/50 rounded-full border border-yellow-500/30 backdrop-blur">
                         <h2 class="text-xl font-bold text-yellow-500 ">Dealer {{ dealer.handCount }}</h2>
