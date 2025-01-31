@@ -1,5 +1,5 @@
 <script setup>
-    import { ref } from 'vue'
+    import { ref , onMounted } from 'vue'
     import {addCardToHand , randomCard , arrDeck} from './scripts/deck'
     const startGame = ref(false)
     const betToStartGame = ref(false)
@@ -17,6 +17,31 @@
         hands:[] ,
         handCount: 0
     })
+
+    const loadGameData = () => {
+        const savedPlayer = localStorage.getItem('player')
+        const savedDealer = localStorage.getItem('dealer')
+        const savedBet = localStorage.getItem('bet')
+        const savedbetToStartGame = localStorage.getItem('betToStartGame')
+        if (savedPlayer) player.value = JSON.parse(savedPlayer)
+        if (savedDealer) dealer.value = JSON.parse(savedDealer)
+        if (savedBet) bet.value = JSON.parse(savedBet)
+        if (savedbetToStartGame) betToStartGame.value = JSON.parse(savedbetToStartGame)
+
+        
+    }
+    const saveGameData = () => {
+        localStorage.setItem('player', JSON.stringify(player.value))
+        localStorage.setItem('dealer', JSON.stringify(dealer.value))
+        localStorage.setItem('bet', JSON.stringify(bet.value))
+        localStorage.setItem('betToStartGame', JSON.stringify(betToStartGame.value))
+
+    }
+    //USE WHEN WEB RELOAD
+    onMounted(() => {
+        loadGameData()
+    })
+
     //Check BlackJack Player
     //Check Dealer Below 17
     //Check The Final Score 
@@ -32,7 +57,7 @@
         }
     }
 
-
+    
     
 
     const handleBetStartGame = (event) => {
@@ -47,6 +72,7 @@
         addCardToHand(dealer)
         HiddenCardDealer = dealer.value.hands.pop()
         console.log(HiddenCardDealer)
+        // saveGameData()
     }
     function handleHit(){
         addCardToHand(player)
@@ -55,7 +81,6 @@
             return result.value = "You Lose"
         }
     }
-   
     
 
     function handleStand(){
@@ -90,7 +115,6 @@
     }
      
     function resetGame(){
-        
         betToStartGame.value = false
     }
 
