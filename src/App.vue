@@ -1,6 +1,6 @@
 <script setup>
     import { ref , onMounted } from 'vue'
-    import {addCardToHand, arrDeck, newDeck} from './scripts/deck'
+    import {addCardToHand, countHand, newDeck} from './scripts/deck'
     const startGame = ref(false)
     const betToStartGame = ref(false)
     const bet = ref(0)
@@ -19,23 +19,26 @@
     })
 
     const loadGameData = () => {
-        const savedPlayer = localStorage.getItem('player')
-        const savedDealer = localStorage.getItem('dealer')
-        const savedBet = localStorage.getItem('bet')
-        const savedbetToStartGame = localStorage.getItem('betToStartGame')
-        if (savedPlayer) player.value = JSON.parse(savedPlayer)
-        if (savedDealer) dealer.value = JSON.parse(savedDealer)
-        if (savedBet) bet.value = JSON.parse(savedBet)
-        if (savedbetToStartGame) betToStartGame.value = JSON.parse(savedbetToStartGame)
-
-        
+        let gameData;
+        const savedGameData = localStorage.getItem('gameData')
+        if (savedGameData){
+            gameData = JSON.parse(savedGameData)
+            player.value = gameData.player
+            dealer.value = gameData.dealer
+            bet.value = gameData.bet
+            betToStartGame.value = gameData.betToStartGame
+            HiddenCardDealer = gameData.HiddenCardDealer
+        }
     }
     const saveGameData = () => {
-        localStorage.setItem('player', JSON.stringify(player.value))
-        localStorage.setItem('dealer', JSON.stringify(dealer.value))
-        localStorage.setItem('bet', JSON.stringify(bet.value))
-        localStorage.setItem('betToStartGame', JSON.stringify(betToStartGame.value))
-
+        const gameData = {
+            player: player.value,
+            dealer: dealer.value,
+            bet : bet.value,
+            betToStartGame : betToStartGame.value,
+            HiddenCardDealer: HiddenCardDealer
+        }
+        localStorage.setItem('gameData',JSON.stringify(gameData))
     }
     //USE WHEN WEB RELOAD
     onMounted(() => {
@@ -72,25 +75,32 @@
         addCardToHand(dealer)
         HiddenCardDealer = dealer.value.hands.pop()
         console.log(HiddenCardDealer)
+        countHand(player)
+        countHand(dealer)
         // saveGameData()
     }
     function handleHit(){
         addCardToHand(player)
+        countHand(player)
         if(player.value.handCount > 21){
             DealerPlay.value = true
             return result.value = "You Lose"
         }
+        
     }
     
 
     function handleStand(){
         DealerPlay.value = true
+        
         dealer.value.hands.push(HiddenCardDealer)
+        countHand(dealer)
         dealerControll()
 
     }
     function handleDouble(){
         addCardToHand(player)
+        countHand(player)
         if(player.value.handCount > 21){
             return result.value = "You Lose"
         }else {
@@ -99,12 +109,12 @@
             dealerControll()
         }
     }
-
     function dealerControll() {
         setTimeout(() => {
             function addCardWithDelay() {
-                if (dealer.value.handCount < 18) {
+                if (dealer.value.handCount < 17) {
                     addCardToHand(dealer); 
+                    countHand(dealer)
                     setTimeout(addCardWithDelay, 1000);
                 }else {
                     checkScore();
@@ -113,11 +123,11 @@
             addCardWithDelay();
         }, 1000); 
     }
-     
     function resetGame(){
         newDeck(player)
         newDeck(dealer)
-        betToStartGame.value = false
+        result.value = ""
+        betToStartGame.value =false
         DealerPlay.value=false
     }
 

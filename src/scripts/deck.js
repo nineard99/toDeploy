@@ -44,7 +44,6 @@ function randomCard() {
 
 function addCardToHand(handHolder){
     handHolder.value.hands.push(arrDeck[randomCard()])
-    countHand(handHolder)
     return handHolder.hands
 }
 
@@ -63,4 +62,4 @@ function newDeck(handHolder){
 
 
 
-export  {addCardToHand, arrDeck, newDeck}
+export  {addCardToHand, countHand, newDeck}
