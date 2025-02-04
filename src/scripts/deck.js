@@ -47,14 +47,24 @@ function addCardToHand(handHolder){
     return handHolder.hands
 }
 
-const countHand = (handHolder) => {
-    handHolder.value.handCount = handHolder.value.hands.reduce((prev, curr) => {
-        if (curr.number == 'A') {
-            return prev + (prev + 11 > 21 ? 1 : 11);
+function countHand(handHolder){
+    let total = 0;
+    let aceCount = 0;
+
+    handHolder.value.hands.forEach((card) => {
+        if (card.number === 'A') {
+            total += 11;
+            aceCount += 1;
+        } else {
+            total += card.values;
         }
-        return prev + curr.values;
-    }, 0);
-}
+    });
+    while (total > 21 && aceCount > 0) {
+        total -= 10;
+        aceCount -= 1;
+    }
+    handHolder.value.handCount = total;
+};
 function newDeck(handHolder){
     usedCards=[]
     handHolder.value.hands=[]

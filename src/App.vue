@@ -1,10 +1,11 @@
 <script setup>
-    import { ref , onMounted } from 'vue'
+    import { ref , onMounted, watch, computed } from 'vue'
     import {addCardToHand, countHand, newDeck} from './scripts/deck'
     const startGame = ref(false)
     const betToStartGame = ref(false)
     const bet = ref(0)
     const DealerPlay = ref(false)
+    let continueGame = ref(false)
     let HiddenCardDealer = {}
     const result  = ref("")
     const player = ref({
@@ -28,7 +29,9 @@
             bet.value = gameData.bet
             betToStartGame.value = gameData.betToStartGame
             HiddenCardDealer = gameData.HiddenCardDealer
+            startGame.value = true
         }
+        
     }
     const saveGameData = () => {
         const gameData = {
@@ -42,7 +45,7 @@
     }
     //USE WHEN WEB RELOAD
     onMounted(() => {
-        loadGameData()
+        if(localStorage.getItem('gameData')) continueGame.value = true
     })
 
     //Check BlackJack Player
@@ -77,7 +80,7 @@
         console.log(HiddenCardDealer)
         countHand(player)
         countHand(dealer)
-        // saveGameData()
+        saveGameData()
     }
     function handleHit(){
         addCardToHand(player)
@@ -130,11 +133,12 @@
         betToStartGame.value =false
         DealerPlay.value=false
     }
+    
 
 </script>
 
 <template>
-    <div id="deck" v-show="false" class="grid grid-cols-12 gap-4">
+    <!-- <div id="deck" v-show="false" class="grid grid-cols-12 gap-4">
         <div v-for="card in arrDeck">
             <div :class="`w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-${card.color} flex flex-col justify-between`">
                 <div class="p-2"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
@@ -143,9 +147,9 @@
                 <div class="p-2 rotate-180"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
             </div>
         </div>
-    </div>   
+    </div>    -->
 
-    <div class="test">
+    <div class="w-full bg-gray-800">
         <!-- display player's balance and high score -->
         <div v-show="false" class="flex flex-col items-center gap-3 p-5 bg-gray-100 rounded-lg max-w-xs">
         <!-- display player's balance -->
@@ -162,21 +166,31 @@
         </div>
 
         <!-- Before StartGame -->
-        <div v-show="!startGame" class="h-screen flex flex-col justify-center items-center">
-            <div class="text-center mb-2">
-                <p class="text-4xl font-extrabold text-yellow-500 tracking-wide drop-shadow-md animate-bounce  ">
-                    INFINITY BLACKJACK
+        <div v-show="!startGame" class="h-screen flex flex-col justify-center items-center bg-gradient-to-b from-black to-green-900">
+            <div class="text-center mb-6">
+                <p class="text-5xl font-extrabold text-yellow-400 tracking-wider drop-shadow-lg neon-text">
+                    ♠️ BLACKJACK ♦️
                 </p>
-                <p class="text-xl font-bold text-yellow-300  drop-shadow-md animate-pulse mt-2">
-                    Made By PeePaNun
+                <p class="text-2xl font-bold text-yellow-200 drop-shadow-md mt-3">
+                    High Score: <span class="text-white">0</span>
                 </p>
             </div>
-            <button 
-                class="px-4 py-2 bg-yellow-500 text-black font-bold rounded-lg slide-up hover:bg-yellow-400 hover:scale-105 transition"
-                @click="startGame = true">
-                PLAY GAME
-            </button>         
+
+            <div class="flex gap-6">
+                <button 
+                    @click="startGame = true"
+                    class="px-6 py-3 bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
+                    🎲 PLAY GAME
+                </button>
+                <button
+                    v-show="continueGame"
+                    @click="loadGameData"
+                    class="px-6 py-3 bg-yellow-600 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-500 hover:scale-105 transition-all transform duration-200">
+                    🔄 CONTINUE
+                </button>
+            </div>
         </div>
+
        
 
         

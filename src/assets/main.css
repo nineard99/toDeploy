@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.test{
-    /* @apply w-full flex flex-col items-center justify-center h-screen bg-gray-800 */
-    @apply w-full bg-gray-800
-}
-
-
 @keyframes slideUp {
     from {
         transform: translateY(100%);
@@ -67,4 +61,9 @@
 }
 .hoverzoom:hover{
     transform: scale(1.1);
+}
+.neon-text {
+    text-shadow: 0 0 10px rgba(255, 223, 0, 0.8), 
+                 0 0 20px rgba(255, 223, 0, 0.6), 
+                 0 0 30px rgba(255, 223, 0, 0.4);
 }
