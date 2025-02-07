@@ -53,10 +53,13 @@
     //Check The Final Score 
     function checkScore(){
         if(dealer.value.handCount > 21){
+            player.value.balance += bet.value * 2
             return result.value = "You Win"
         }else if(player.value.handCount === dealer.value.handCount){
+            player.value.balance += bet.value
             return result.value = "Draw"
         }else if(player.value.handCount > dealer.value.handCount){
+            player.value.balance += bet.value * 2
             return result.value = "You Win"
         }else if(player.value.handCount < dealer.value.handCount){
             return result.value = "You Lose"
@@ -99,7 +102,12 @@
         dealerControll()
 
     }
+    // There is a bug where the bet can be double up every time we click 'Double Button'
+    // and a bug where sometimes click Double and it doesn't clear the UI
+    // and it can be click many times as you like.
     function handleDouble(){
+        player.value.balance -= bet.value
+        bet.value *= 2
         addCardToHand(player)
         countHand(player)
         if(player.value.handCount > 21){
