@@ -63,8 +63,6 @@
         }
     }
 
-    
-    
 
     const handleBetStartGame = (event) => {
         event.preventDefault()
@@ -134,6 +132,11 @@
         DealerPlay.value=false
     }
     
+    const howToPlay=ref(false)
+    function gameDescription() {
+        howToPlay.value=!howToPlay.value
+    }
+
 
 </script>
 
@@ -189,7 +192,67 @@
                     🔄 CONTINUE
                 </button>
             </div>
+            <button @click="gameDescription" type="button" class="m-4 text-sm p-2.5 text-center inline-flex items-center bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
+                <span class="h-4"> How to play ? </span>
+            </button>
         </div>
+        <div v-show="howToPlay" class="overflow-hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full p-4">
+            <div class="relative p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+                <div class="relative bg-white rounded-lg shadow-lg">
+                    <button @click="gameDescription" type="button" class="absolute top-4 right-4 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-10 h-10 flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                    </button>
+                    <div class="p-6 md:p-8 text-center overflow-y-auto max-h-[80vh]">
+                        <h3 class="mb-6 text-xl font-semibold text-gray-700 dark:text-gray-300">เป้าหมายของเกม: ทำแต้มให้ใกล้เคียง 21 มากที่สุด แต่ห้ามเกิน</h3>
+                        <ul class="mb-6 text-base font-normal text-gray-600 dark:text-gray-400 text-left space-y-4">
+                            <li><strong>เป้าหมายของเกม:</strong> ทำแต้มให้ใกล้ 21 มากที่สุด ห้ามเกิน</li>
+                            <li><strong>การแจกไพ่:</strong> 
+                                <ul class="ml-6 list-disc">
+                                    <li>ผู้เล่นและเจ้ามือได้รับไพ่คนละ 2 ใบ</li>
+                                    <li>ไพ่ของผู้เล่นหงายทั้งหมด ส่วนเจ้ามือหงาย 1 ใบ</li>
+                                </ul>
+                            </li>
+                            <li><strong>มูลค่าไพ่:</strong>
+                                <ul class="ml-6 list-disc">
+                                    <li>เลข 2-10 มีค่าตามตัวเลข</li>
+                                    <li>J, Q, K มีค่า 10</li>
+                                    <li>A มีค่า 1 หรือ 11 ขึ้นอยู่กับสถานการณ์</li>
+                                </ul>
+                            </li>
+                            <li><strong>ตัวเลือกของผู้เล่น:</strong>
+                                <ul class="ml-6 list-disc">
+                                    <li><strong>Hit:</strong> ขอไพ่เพิ่ม</li>
+                                    <li><strong>Stand:</strong> หยุด ไม่ขอไพ่เพิ่ม</li>
+                                    <li><strong>Double Down:</strong> เพิ่มเงินเดิมพัน 2 เท่า และรับไพ่เพิ่ม 1 ใบ</li>
+                                    <li><strong>Split:</strong> แยกไพ่เป็นสองมือ (เมื่อได้ไพ่คู่)</li>
+                                </ul>
+                            </li>
+                            <li><strong>กติกาของเจ้ามือ:</strong>
+                                <ul class="ml-6 list-disc">
+                                    <li>ต้องจั่วไพ่เพิ่มถ้าแต้มต่ำกว่า 17</li>
+                                    <li>หยุดเมื่อแต้ม 17 ขึ้นไป</li>
+                                </ul>
+                            </li>
+                            <li><strong>ตัดสินผล:</strong>
+                                <ul class="ml-6 list-disc">
+                                    <li><strong>Blackjack (21 แต้มจากไพ่ 2 ใบแรก):</strong> ชนะทันที</li>
+                                    <li><strong>แต้มสูงกว่าเจ้ามือ แต่ไม่เกิน 21:</strong> ชนะ</li>
+                                    <li><strong>แต้มเกิน 21 (Bust):</strong> แพ้</li>
+                                    <li><strong>แต้มเท่ากับเจ้ามือ:</strong> เสมอ (Push)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <button @click="startGame = true, gameDescription()" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-lg px-6 py-3">
+                            Let's Play
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
        
 
