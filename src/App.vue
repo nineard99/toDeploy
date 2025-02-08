@@ -10,7 +10,7 @@
     const result  = ref("")
     const player = ref({
         balance: 1000,
-        highScore: 0,
+        highScore: localStorage.getItem('money'),
         hands:[] ,
         handCount: 0
     })
@@ -138,6 +138,7 @@
         result.value = ""
         betToStartGame.value =false
         DealerPlay.value=false
+        bestHighscore()
     }
     
     const howToPlay=ref(false)
@@ -145,6 +146,13 @@
         howToPlay.value=!howToPlay.value
     }
 
+    function bestHighscore(){
+        if(localStorage.getItem('money') < player.value.balance){
+           localStorage.setItem('money',player.value.balance) 
+          
+        }
+        
+    }
 
 </script>
 
@@ -183,7 +191,7 @@
                     ♠️ BLACKJACK ♦️
                 </p>
                 <p class="text-2xl font-bold text-yellow-200 drop-shadow-md mt-3">
-                    High Score: <span class="text-white">0</span>
+                    High Score: <span class="text-white">{{player.highScore}}</span>
                 </p>
             </div>
 
