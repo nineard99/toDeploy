@@ -1,189 +1,21 @@
 <script setup>
-    import { ref , onMounted, watch, computed } from 'vue'
-    import {addCardToHand, countHand, newDeck} from './scripts/deck'
-    const startGame = ref(false)
-    const betToStartGame = ref(false)
-    const bet = ref(0)
-    const DealerPlay = ref(false)
-    let continueGame = ref(false)
-    let HiddenCardDealer = {}
-    const result  = ref("")
-    const player = ref({
-        balance: 1000,
-        highScore: localStorage.getItem('money'),
-        hands:[] ,
-        handCount: 0
-    })
-    const dealer = ref({
-        hands:[] ,
-        handCount: 0
-    })
+    import { onMounted} from 'vue'
+    import { startGame, betToStartGame,bet,DealerPlay,continueGame,result,player,dealer ,howToPlay} from './scripts/gameState'
+    import {loadGameData } from './scripts/storage'
+    import { handleBetStartGame, handleHit, handleStand, handleDouble, resetGame} from './scripts/gameAction'
 
-    const loadGameData = () => {
-        let gameData;
-        const savedGameData = localStorage.getItem('gameData')
-        if (savedGameData){
-            gameData = JSON.parse(savedGameData)
-            player.value = gameData.player
-            dealer.value = gameData.dealer
-            bet.value = gameData.bet
-            betToStartGame.value = gameData.betToStartGame
-            HiddenCardDealer = gameData.HiddenCardDealer
-            startGame.value = true
-        }
-        
-    }
-    const saveGameData = () => {
-        const gameData = {
-            player: player.value,
-            dealer: dealer.value,
-            bet : bet.value,
-            betToStartGame : betToStartGame.value,
-            HiddenCardDealer: HiddenCardDealer
-        }
-        localStorage.setItem('gameData',JSON.stringify(gameData))
-    }
+
     //USE WHEN WEB RELOAD
     onMounted(() => {
         if(localStorage.getItem('gameData')) continueGame.value = true
     })
-
-    //Check BlackJack Player
-    //Check Dealer Below 17
-    //Check The Final Score 
-    function checkScore(){
-        if(dealer.value.handCount > 21){
-            player.value.balance += bet.value * 2
-            return result.value = "You Win"
-        }else if(player.value.handCount === dealer.value.handCount){
-            player.value.balance += bet.value
-            return result.value = "Draw"
-        }else if(player.value.handCount > dealer.value.handCount){
-            player.value.balance += bet.value * 2
-            return result.value = "You Win"
-        }else if(player.value.handCount < dealer.value.handCount){
-            return result.value = "You Lose"
-        }
-    }
-
-
-    const handleBetStartGame = (event) => {
-        event.preventDefault()
-        console.log(bet.value)
-        betToStartGame.value = true;
-        player.value.balance -= bet.value
-        console.log(player.balance)
-        addCardToHand(player)
-        addCardToHand(player)
-        addCardToHand(dealer)
-        addCardToHand(dealer)
-        HiddenCardDealer = dealer.value.hands.pop()
-        console.log(HiddenCardDealer)
-        countHand(player)
-        countHand(dealer)
-        saveGameData()
-    }
-    function handleHit(){
-        addCardToHand(player)
-        countHand(player)
-        if(player.value.handCount > 21){
-            DealerPlay.value = true
-            return result.value = "You Lose"
-        }
-        
-    }
     
-
-    function handleStand(){
-        DealerPlay.value = true
-        
-        dealer.value.hands.push(HiddenCardDealer)
-        countHand(dealer)
-        dealerControll()
-
-    }
-    // There is a bug where the bet can be double up every time we click 'Double Button'
-    // and a bug where sometimes click Double and it doesn't clear the UI
-    // and it can be click many times as you like.
-    function handleDouble(){
-        player.value.balance -= bet.value
-        bet.value *= 2
-        addCardToHand(player)
-        countHand(player)
-        if(player.value.handCount > 21){
-            return result.value = "You Lose"
-        }else {
-            DealerPlay.value = true
-            dealer.value.hands.push(HiddenCardDealer)
-            dealerControll()
-        }
-    }
-    function dealerControll() {
-        setTimeout(() => {
-            function addCardWithDelay() {
-                if (dealer.value.handCount < 17) {
-                    addCardToHand(dealer); 
-                    countHand(dealer)
-                    setTimeout(addCardWithDelay, 1000);
-                }else {
-                    checkScore();
-                }
-            }
-            addCardWithDelay();
-        }, 1000); 
-    }
-    function resetGame(){
-        newDeck(player)
-        newDeck(dealer)
-        result.value = ""
-        betToStartGame.value =false
-        DealerPlay.value=false
-        bestHighscore()
-    }
-    
-    const howToPlay=ref(false)
-    function gameDescription() {
-        howToPlay.value=!howToPlay.value
-    }
-
-    function bestHighscore(){
-        if(localStorage.getItem('money') < player.value.balance){
-           localStorage.setItem('money',player.value.balance) 
-          
-        }
-        
-    }
-
 </script>
 
 <template>
-    <!-- <div id="deck" v-show="false" class="grid grid-cols-12 gap-4">
-        <div v-for="card in arrDeck">
-            <div :class="`w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-${card.color} flex flex-col justify-between`">
-                <div class="p-2"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
-                <div v-else class="text-center text-7xl" style="color:#282828;font-family: Oldenburg;">{{ card.number }}</div>
-                <div class="p-2 rotate-180"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-            </div>
-        </div>
-    </div>    -->
+
 
     <div class="w-full bg-gray-800">
-        <!-- display player's balance and high score -->
-        <div v-show="false" class="flex flex-col items-center gap-3 p-5 bg-gray-100 rounded-lg max-w-xs">
-        <!-- display player's balance -->
-            <div class="w-50 p-3 bg-green-100 rounded-lg">
-                <span class="text-lg font-bold text-green-800">Your balance:</span>
-                <span class="text-lg font-bold text-green-600"> ${{player.balance}} </span>
-            </div>
-
-            <!-- display player's high score -->
-            <div class="w-50 p-3 bg-blue-100 rounded-lg">
-                <span class="text-lg font-bold text-blue-800">High Score: </span>
-                <span class="text-lg font-bold text-blue-600"> {{player.highScore}}</span>
-            </div>
-        </div>
-
         <!-- Before StartGame -->
         <div v-show="!startGame" class="h-screen flex flex-col justify-center items-center bg-gradient-to-b from-black to-green-900">
             <div class="text-center mb-6">
@@ -208,14 +40,14 @@
                     🔄 CONTINUE
                 </button>
             </div>
-            <button @click="gameDescription" type="button" class="m-4 text-sm p-2.5 text-center inline-flex items-center bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
+            <button @click="howToPlay =!howToPlay" type="button" class="m-4 text-sm p-2.5 text-center inline-flex items-center bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
                 <span class="h-4"> How to play ? </span>
             </button>
         </div>
         <div v-show="howToPlay" class="overflow-hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full p-4">
             <div class="relative p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
                 <div class="relative bg-white rounded-lg shadow-lg">
-                    <button @click="gameDescription" type="button" class="absolute top-4 right-4 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-10 h-10 flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <button @click="howToPlay =!howToPlay " type="button" class="absolute top-4 right-4 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-10 h-10 flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                         </svg>
@@ -267,12 +99,6 @@
                 </div>
             </div>
         </div>
-
-
-
-       
-
-        
     </div>
     
     <div v-show="startGame" class="h-screen bg-gray-800 overflow-hidden">
@@ -401,7 +227,7 @@
                     </button>
                     <button 
                         class="px-6 py-2 text-lg font-bold text-white bg-yellow-600 rounded-lg hover:bg-yellow-400 transition"
-                        :disabled="bet * 2 > player.balance"
+                        :v-show="doubleOn"
                         @click="handleDouble">
                         <div class="relative flex flex-col items-center">
                             <img class="size-16 p-1 drop-shadow-md" src="../Image/double.png">
