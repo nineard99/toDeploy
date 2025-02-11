@@ -72,4 +72,4 @@ function newDeck(handHolder){
 
 
 
-export  {addCardToHand, countHand, newDeck}
+export  {addCardToHand, countHand, newDeck }

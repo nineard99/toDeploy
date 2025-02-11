@@ -9,6 +9,7 @@
     onMounted(() => {
         if(localStorage.getItem('gameData')) continueGame.value = true
     })
+
     
 </script>
 
@@ -165,7 +166,7 @@
                     </div>
                     <ul class="flex w-full items-center justify-center">
                         <li class="m-5" v-for="card in dealer.hands" :key="card.symbols + card.number ">
-                            <div :class="`w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-${card.color} flex flex-col justify-between`">
+                            <div :class="`w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-white flex flex-col justify-between`">
                                 <div class="p-2"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
                                 <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
                                 <div v-else class="text-center text-7xl" style="color:#282828;font-family: Oldenburg;">{{ card.number }}</div>
@@ -188,8 +189,8 @@
                         <h2 class="text-xl font-bold text-yellow-500 ">Player {{player.handCount }} </h2>
                     </div>
                     <ul class="flex w-full items-center justify-center">
-                        <li class="m-5" v-for="card in player.hands" :key="card.symbols + card.number ">
-                            <div :class="`w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-${card.color} flex flex-col justify-between`">
+                        <li class="m-5" v-for="card in player.hands" :key="card.symbols + card.number" >
+                            <div :class="`w-40 bg-white h-48 border-2 border-solid border-gray-900 rounded-sm flex flex-col justify-between`">
                                 <div class="p-2"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
                                 <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
                                 <div v-else class="text-center text-7xl" style="color:#282828;font-family: Oldenburg;">{{ card.number }}</div>
@@ -226,14 +227,15 @@
                         </div>
                     </button>
                     <button 
-                        class="px-6 py-2 text-lg font-bold text-white bg-yellow-600 rounded-lg hover:bg-yellow-400 transition"
-                        :v-show="doubleOn"
+                        class="px-6 py-2 text-lg font-bold text-white bg-yellow-600 rounded-lg hover:bg-yellow-400 transition disabled:bg-yellow-300 disabled:cursor-not-allowed disabled:text-gray-500"
+                        v-if="bet <= player.balance"
                         @click="handleDouble">
                         <div class="relative flex flex-col items-center">
                             <img class="size-16 p-1 drop-shadow-md" src="../Image/double.png">
                             <span class="text-sm font-bold absolute bottom-[-18px] bg-yellow-500 text-white px-3 py-1 rounded-lg shadow-md border border-green-700">Double</span>
                         </div>
                     </button>
+
                 </div>
             </div>
         </div>    
