@@ -1,7 +1,7 @@
 import {addCardToHand, countHand, newDeck} from './deck'
 import {betToStartGame,bet,DealerPlay,HiddenCardDealer,result,player,dealer } from './gameState'
 import { saveGameData} from './storage'
-import {checkScore , bestHighscore} from './gameResult'
+import {checkScore} from './gameResult'
 
 export const handleBetStartGame = (event) => {
     event.preventDefault()
@@ -63,7 +63,6 @@ export function resetGame(){
     result.value = ""
     betToStartGame.value =false
     DealerPlay.value=false
-    bestHighscore()
 }
 
 function dealerControll() {

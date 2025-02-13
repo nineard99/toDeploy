@@ -14,8 +14,6 @@
 </script>
 
 <template>
-
-
     <div class="w-full bg-gray-800">
         <!-- Before StartGame -->
         <div v-show="!startGame" class="h-screen flex flex-col justify-center items-center bg-gradient-to-b from-black to-green-900">
@@ -45,6 +43,7 @@
                 <span class="h-4"> How to play ? </span>
             </button>
         </div>
+
         <div v-show="howToPlay" class="overflow-hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full p-4">
             <div class="relative p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
                 <div class="relative bg-white rounded-lg shadow-lg">
@@ -100,6 +99,7 @@
                 </div>
             </div>
         </div>
+        
     </div>
     
     <div v-show="startGame" class="h-screen bg-gray-800 overflow-hidden">
@@ -143,58 +143,56 @@
             </div>
 
             <div v-show="betToStartGame">
-                <h1 class="mb-2 mt-6 text-3xl font-bold tracking-wide text-red-400 
-                        bg-gradient-to-b from-yellow-300 to-yellow-500 
-                        shadow-lg shadow-yellow-500/50 
-                        border-2 border-yellow-500 
-                        px-6 py-3 rounded-lg"
-                        v-show="result.length > 0">
+                <div v-show="result.length > 0" class="mb-2 mt-6 text-3xl font-bold tracking-wide text-red-400 
+                            bg-gradient-to-b from-yellow-300 to-yellow-500 
+                            shadow-lg shadow-yellow-500/50 
+                            border-2 border-yellow-500 
+                            px-6 py-3 rounded-lg">
+                    <div class="flex justify-between items-center">
                         {{ result }}
-                    </h1>
-                    <button
+                        <button
                             type="submit"
                             class="px-6 py-3 text-lg font-bold slide-left text-yellow-300 bg-gradient-to-r from-black via-gray-800 to-black border border-yellow-500 rounded-lg shadow-md hover:shadow-yellow-500/50 hover:bg-yellow-500 hover:text-yellow-200 hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:border-red-500 disabled:cursor-not-allowed"
-                            v-show="result.length > 0"
                             v-text="'Retry'"
                             @click="resetGame">
+                        </button>
+                    </div>
+                </div>    
 
-                    </button>
-                    
                 <div class="flex-1 flex flex-col items-center justify-center">
                     <div class="px-4 py-1 mt-3 hoverzoom w-[9rem] flex slide-left justify-center bg-black/50 rounded-full border border-yellow-500/30 backdrop-blur">
-                        <h2 class="text-xl font-bold text-yellow-500 ">Dealer {{ dealer.handCount }}</h2>
+                        <h2 class="w-lg md:text-xl font-bold text-yellow-500 ">Dealer {{ dealer.handCount }}</h2>
                     </div>
-                    <ul class="flex w-full items-center justify-center">
-                        <li class="m-5" v-for="card in dealer.hands" :key="card.symbols + card.number ">
-                            <div :class="`w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-white flex flex-col justify-between`">
-                                <div class="p-2"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                                <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
-                                <div v-else class="text-center text-7xl" style="color:#282828;font-family: Oldenburg;">{{ card.number }}</div>
-                                <div class="p-2 rotate-180"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
+                    <ul class="flex flex-wrap w-full items-center justify-center">
+                        <li class="m-0.5 md:m-2.5" v-for="card in dealer.hands" :key="card.symbols + card.number ">
+                            <div :class="`w-24 h-32 md:w-40 md:h-48 border-2 border-solid border-gray-900 rounded-sm bg-white flex flex-col justify-between`">
+                                <div class="p-2"><img :src="`../Image/${card.symbols}.png`" class="w-4 md:w-7"></div>
+                                <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-5xl md:text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
+                                <div v-else class="text-center text-5xl md:text-7xl" style="color:#282828;font-family: Oldenburg;">{{ card.number }}</div>
+                                <div class="p-2 rotate-180"><img :src="`../Image/${card.symbols}.png`" class="w-4 md:w-7"></div>
                             </div>
                         </li>
-                        <li v-show="!DealerPlay">
-                            <div class="w-40 h-48 border-2 border-solid border-gray-900 rounded-sm bg-rose-50 flex flex-col justify-between" > 
-                                <div style="padding: 10px;"></div>
-                                <div style="text-align: center; font-size: 70px; color: #282828;font-family: Oldenburg;">?</div>
-                                <div style="padding: 10px;"></div>
+                        <li v-show="!DealerPlay" class="m-0.5 md:m-2.5">
+                            <div :class="`w-24 h-32 md:w-40 md:h-48 border-2 border-solid border-gray-900 rounded-sm bg-white flex items-center justify-center`">
+                                <div class="text-center text-5xl md:text-7xl" style="color:#282828;font-family: Oldenburg;"> ? </div>
                             </div>
                         </li>
                         
                     </ul>
                 </div>
                 <div class="w-full h-1 bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent"></div>
+                
                 <div class="flex-1 flex flex-col items-center justify-center">
                     <div class="px-4 py-1 hoverzoom w-[9rem] mt-3 flex justify-center bg-black/50 rounded-full border border-yellow-500/30 backdrop-blur slide-right">
-                        <h2 class="text-xl font-bold text-yellow-500 ">Player {{player.handCount }} </h2>
+                        <h2 class="w-lg md:text-xl font-bold text-yellow-500 ">Player {{player.handCount }} </h2>
                     </div>
-                    <ul class="flex w-full items-center justify-center">
-                        <li class="m-5" v-for="card in player.hands" :key="card.symbols + card.number" >
-                            <div :class="`w-40 bg-white h-48 border-2 border-solid border-gray-900 rounded-sm flex flex-col justify-between`">
-                                <div class="p-2"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
-                                <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
-                                <div v-else class="text-center text-7xl" style="color:#282828;font-family: Oldenburg;">{{ card.number }}</div>
-                                <div class="p-2 rotate-180"><img :src="`../Image/${card.symbols}.png`" style="width:25px;"></div>
+                    <ul class="flex flex-wrap w-full items-center justify-center">
+                        <li class="m-0.5 md:m-2.5" v-for="card in player.hands" :key="card.symbols + card.number" >
+                            <div :class="`w-24 h-32 md:w-40 md:h-48 border-2 border-solid border-gray-900 rounded-sm bg-white flex flex-col justify-between`">
+                                <div class="p-2"><img :src="`../Image/${card.symbols}.png`" class="w-4 md:w-7"></div>
+                                <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-5xl md:text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
+                                <div v-else class="text-center text-5xl md:text-7xl" style="color:#282828;font-family: Oldenburg;">{{ card.number }}</div>
+                                <div class="p-2 rotate-180"><img :src="`../Image/${card.symbols}.png`" class="w-4 md:w-7"></div>
                             </div>
                         </li>
                     </ul>
