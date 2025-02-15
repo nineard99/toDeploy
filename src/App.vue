@@ -53,7 +53,7 @@
                         </svg>
                     </button>
                     <div class="p-6 md:p-8 text-center overflow-y-auto max-h-[80vh]">
-                        <h3 class="mb-6 text-xl font-semibold text-gray-700 dark:text-gray-300">เป้าหมายของเกม: ทำแต้มให้ใกล้เคียง 21 มากที่สุด แต่ห้ามเกิน</h3>
+                        <h3 class="mb-6 text-xl font-semibold text-gray-700 dark:text-gray-600">เป้าหมายของเกม: ทำแต้มให้ใกล้เคียง 21 มากที่สุด แต่ห้ามเกิน</h3>
                         <ul class="mb-6 text-base font-normal text-gray-600 dark:text-gray-400 text-left space-y-4">
                             <li><strong>เป้าหมายของเกม:</strong> ทำแต้มให้ใกล้ 21 มากที่สุด ห้ามเกิน</li>
                             <li><strong>การแจกไพ่:</strong> 
@@ -92,7 +92,7 @@
                                 </ul>
                             </li>
                         </ul>
-                        <button @click="startGame = true, gameDescription()" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-lg px-6 py-3">
+                        <button @click="startGame = true, howToPlay = false, gameDescription()" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-lg px-6 py-3">
                             Let's Play
                         </button>
                     </div>
@@ -243,6 +243,16 @@
         </div>    
     </div>
 
+    <div v-if="result === 'You Lose' && player.balance === 0" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-70">
+        <div class="bg-white p-12 rounded-2xl shadow-2xl w-[500px] max-w-full text-center">
+            <h2 class="text-4xl font-extrabold text-red-600">Game Over</h2>
+            <p class="mt-4 text-lg text-gray-700">Your balance has reached 0</p>
+            <p class="text-lg text-gray-700">Better luck next time!</p>
+            <button @click="resetGame, player.balance = 1000" class="px-6 py-3 my-3 bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
+                ขอตังพ่อ
+            </button>
+        </div>
+    </div>
 
 
 </template>

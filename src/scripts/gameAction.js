@@ -42,9 +42,6 @@ export function handleStand(){
 
 }
 
-// There is a bug where the bet can be double up every time we click 'Double Button'
-// and a bug where sometimes click Double and it doesn't clear the UI
-// and it can be click many times as you like.
 export function handleDouble(){
     player.value.balance -= bet.value
     bet.value *= 2
@@ -53,13 +50,17 @@ export function handleDouble(){
     if(player.value.handCount > 21){
         player.value.winStreak = 0;
         bestHighScore()
-        return result.value = "You Lose"
-
-    }else {
         DealerPlay.value = true
-        dealer.value.hands.push(HiddenCardDealer.value)
+        result.value = "You Lose"
+    }else {
+        DealerPlay.value = true;
+        dealer.value.hands.push(HiddenCardDealer.value);
         dealerControll()
     }
+
+    setTimeout(() => {
+        bet.value /= 2
+    }, 3000)
 }
 
 export function resetGame(){
