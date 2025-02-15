@@ -11,7 +11,7 @@ export const howToPlay=ref(false)
 
 export const player = ref({
     balance: 1000,
-    highScore: localStorage.getItem('money'),
+    highScore: localStorage.getItem('money') ,
     hands: [],
     handCount: 0,
     winStreak: 0
@@ -21,3 +21,13 @@ export const dealer = ref({
     hands: [],
     handCount: 0
 })
+
+export function clearState(){
+    startGame.value = false
+    betToStartGame.value = false
+    bet.value = 0
+    DealerPlay.value = false
+    continueGame.value = false
+    HiddenCardDealer.value = {}
+    result.value = ""
+}

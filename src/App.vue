@@ -1,6 +1,6 @@
 <script setup>
     import { onMounted} from 'vue'
-    import { startGame, betToStartGame,bet,DealerPlay,continueGame,result,player,dealer ,howToPlay} from './scripts/gameState'
+    import {clearState,  startGame, betToStartGame,bet,DealerPlay,continueGame,result,player,dealer ,howToPlay} from './scripts/gameState'
     import {loadGameData } from './scripts/storage'
     import { handleBetStartGame, handleHit, handleStand, handleDouble, resetGame} from './scripts/gameAction'
 
@@ -74,7 +74,6 @@
                                     <li><strong>Hit:</strong> ขอไพ่เพิ่ม</li>
                                     <li><strong>Stand:</strong> หยุด ไม่ขอไพ่เพิ่ม</li>
                                     <li><strong>Double Down:</strong> เพิ่มเงินเดิมพัน 2 เท่า และรับไพ่เพิ่ม 1 ใบ</li>
-                                    <li><strong>Split:</strong> แยกไพ่เป็นสองมือ (เมื่อได้ไพ่คู่)</li>
                                 </ul>
                             </li>
                             <li><strong>กติกาของเจ้ามือ:</strong>
@@ -85,7 +84,7 @@
                             </li>
                             <li><strong>ตัดสินผล:</strong>
                                 <ul class="ml-6 list-disc">
-                                    <li><strong>Blackjack (21 แต้มจากไพ่ 2 ใบแรก):</strong> ชนะทันที</li>
+                                    <li><strong>Blackjack (21 แต้มจากไพ่ 2 ใบแรก):</strong> ชนะ</li>
                                     <li><strong>แต้มสูงกว่าเจ้ามือ แต่ไม่เกิน 21:</strong> ชนะ</li>
                                     <li><strong>แต้มเกิน 21 (Bust):</strong> แพ้</li>
                                     <li><strong>แต้มเท่ากับเจ้ามือ:</strong> เสมอ (Push)</li>
@@ -103,21 +102,40 @@
     </div>
     
     <div v-show="startGame" class="h-screen bg-gray-800 overflow-hidden">
-        <nav class="bg-black text-white py-4 px-4 border-b-4 border-yellow-600">
+        <nav class="bg-gradient-to-b from-black to-gray-900 text-white py-4 px-6 border-b-4 border-yellow-600 shadow-lg">
             <div class="max-w-screen-xl mx-auto flex items-center justify-between">
+                
                 <div class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <span class="self-center text-2xl text-white font-semibold whitespace-nowrap ">PeePhanan</span>
+                    <span class="self-center text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 drop-shadow-[0_0_10px_rgba(255,215,0,0.9)]">
+                        PeePhanan
+                    </span>
                 </div>
-                <div class="text-2xl font-bold hidden w-full md:flex md:w-auto ">BLACKJACK</div>
 
-                <div class="flex text-white md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <span class="self-center text-2xl text-white font-semibold whitespace-nowrap "><span class="text-sm text-stone-200 ">Your balance </span>${{ player.balance }}</span>
+                <div class="text-3xl font-black tracking-widest hidden w-full md:flex md:w-auto text-yellow-400 drop-shadow-lg">
+                        BLACKJACK 
                 </div>
-                <div class="flex text-white md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <span class="self-center text-2xl text-white font-semibold whitespace-nowrap "><span class="text-sm text-stone-200 ">WinStreak</span> {{ player.winStreak }}</span>
+
+                <div class="flex items-center space-x-6 text-white md:order-2">
+                    
+                    <!-- Money -->
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 text-2xl" > 💰</span>
+                        <span class="text-lg font-semibold text-yellow-300">
+                            <span class="text-sm text-gray-400">Your Balance:</span> ${{ player.balance }}
+                        </span>
+                    </div>
+
+                    <!-- WinStreak -->
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 text-2xl" > 🔥 </span>
+                        <span class="text-lg font-semibold text-green-400">
+                            <span class="text-sm text-gray-400">WinStreak:</span> {{ player.winStreak }}
+                        </span>
+                    </div>
                 </div>
             </div>
         </nav>
+
         <!-- StartGame Table -->
         <div v-show="startGame" class="slide-up bg-cover flex justify-center bg-center w-full h-full shadow-xl" style="background-image: url('./Image/BackGround.jpg');" >
             <div v-show="!betToStartGame" class="flex items-center">
@@ -204,10 +222,15 @@
         </div>        
         <!-- footer -->
         <div v-show="betToStartGame" class="relative bg-green-500">
-            <div class="absolute bottom-20 left-5 text-white">
-                <p>${{ bet }}</p>
-                <p class="text-xl">TOTAL BET</p>
+            <div class="absolute bottom-20 left-5 text-white p-4 bg-black/40 rounded-lg shadow-xl border-2 border-yellow-500">
+                <p class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]">
+                    ${{ bet }}
+                </p>
+                <p class="text-2xl font-black tracking-[0.15em] text-yellow-300 drop-shadow-md uppercase">
+                    TOTAL BET
+                </p>
             </div>
+
             
             <div class="absolute bottom-20 right-5 text-white">
                 <!-- ปุ่มควบคุม -->
@@ -248,7 +271,7 @@
             <h2 class="text-4xl font-extrabold text-red-600">Game Over</h2>
             <p class="mt-4 text-lg text-gray-700">Your balance has reached 0</p>
             <p class="text-lg text-gray-700">Better luck next time!</p>
-            <button @click="resetGame, player.balance = 1000" class="px-6 py-3 my-3 bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
+            <button @click="resetGame(),clearState(),player.balance = 1000" class="px-6 py-3 my-3 bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
                 ขอตังพ่อ
             </button>
         </div>
