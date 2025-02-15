@@ -27,6 +27,7 @@ export function handleHit(){
     if(player.value.handCount > 21){
         DealerPlay.value = true
         bestHighScore()
+        player.value.winStreak = 0;
         return result.value = "You Lose"
     }
     
@@ -35,7 +36,6 @@ export function handleHit(){
 
 export function handleStand(){
     DealerPlay.value = true
-    
     dealer.value.hands.push(HiddenCardDealer.value)
     countHand(dealer)
     dealerControll()
@@ -51,6 +51,7 @@ export function handleDouble(){
     addCardToHand(player)
     countHand(player)
     if(player.value.handCount > 21){
+        player.value.winStreak = 0;
         bestHighScore()
         return result.value = "You Lose"
 

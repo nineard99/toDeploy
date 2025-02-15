@@ -113,6 +113,9 @@
                 <div class="flex text-white md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                     <span class="self-center text-2xl text-white font-semibold whitespace-nowrap "><span class="text-sm text-stone-200 ">Your balance </span>${{ player.balance }}</span>
                 </div>
+                <div class="flex text-white md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                    <span class="self-center text-2xl text-white font-semibold whitespace-nowrap "><span class="text-sm text-stone-200 ">WinStreak</span> {{ player.winStreak }}</span>
+                </div>
             </div>
         </nav>
         <!-- StartGame Table -->
@@ -205,6 +208,7 @@
                 <p>${{ bet }}</p>
                 <p class="text-xl">TOTAL BET</p>
             </div>
+            
             <div class="absolute bottom-20 right-5 text-white">
                 <!-- ปุ่มควบคุม -->
                 <div v-show="!DealerPlay" class="flex items-center justify-center mt-4 gap-4 w-full">

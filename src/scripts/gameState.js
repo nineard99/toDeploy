@@ -13,7 +13,8 @@ export const player = ref({
     balance: 1000,
     highScore: localStorage.getItem('money'),
     hands: [],
-    handCount: 0
+    handCount: 0,
+    winStreak: 0
 })
 
 export const dealer = ref({
