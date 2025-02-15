@@ -1,7 +1,8 @@
 import {addCardToHand, countHand, newDeck} from './deck'
 import {betToStartGame,bet,DealerPlay,HiddenCardDealer,result,player,dealer } from './gameState'
 import { saveGameData} from './storage'
-import {checkScore} from './gameResult'
+import {checkScore,bestHighScore} from './gameResult'
+
 
 export const handleBetStartGame = (event) => {
     event.preventDefault()
@@ -25,6 +26,7 @@ export function handleHit(){
     countHand(player)
     if(player.value.handCount > 21){
         DealerPlay.value = true
+        bestHighScore()
         return result.value = "You Lose"
     }
     
@@ -49,7 +51,9 @@ export function handleDouble(){
     addCardToHand(player)
     countHand(player)
     if(player.value.handCount > 21){
+        bestHighScore()
         return result.value = "You Lose"
+
     }else {
         DealerPlay.value = true
         dealer.value.hands.push(HiddenCardDealer.value)

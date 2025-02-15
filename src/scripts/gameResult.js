@@ -19,8 +19,9 @@ export function checkScore(){
     }
 }
 
-function bestHighScore(){
+export function bestHighScore(){
     if(localStorage.getItem('money') < player.value.balance){
-       localStorage.setItem('money',player.value.balance) 
+       return localStorage.setItem('money',player.value.balance)
     } 
 }
+
