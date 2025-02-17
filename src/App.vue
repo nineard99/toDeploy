@@ -1,9 +1,9 @@
 <script setup>
     import { onMounted} from 'vue'
-    import {clearState,  startGame, betToStartGame,bet,DealerPlay,continueGame,result,player,dealer ,howToPlay} from './scripts/gameState'
+    import {  startGame, betToStartGame,bet,DealerPlay,continueGame,result,player,dealer ,howToPlay} from './scripts/gameState'
     import {loadGameData } from './scripts/storage'
-    import { handleBetStartGame, handleHit, handleStand, handleDouble, resetGame} from './scripts/gameAction'
-
+    import { handleBetStartGame,handleHit, handleStand, handleDouble, resetGame} from './scripts/gameAction'
+    import {outOfMoney} from './scripts/gameResult'
 
     //USE WHEN WEB RELOAD
     onMounted(() => {
@@ -18,11 +18,11 @@
         <!-- Before StartGame -->
         <div v-show="!startGame" class="h-screen flex flex-col justify-center items-center bg-gradient-to-b from-black to-green-900">
             <div class="text-center mb-6">
-                <p class="text-5xl font-extrabold text-yellow-400 tracking-wider drop-shadow-lg neon-text">
+                <p class="text-5xl animate-pulse  font-extrabold text-yellow-400 tracking-wider drop-shadow-lg neon-text">
                     ♠️ BLACKJACK ♦️
                 </p>
                 <p class="text-2xl font-bold text-yellow-200 drop-shadow-md mt-3">
-                    High Score: <span class="text-white">{{player.highScore}}</span>
+                    High Score: <span class="text-white">{{player.highscore}}</span>
                 </p>
             </div>
 
@@ -84,7 +84,7 @@
                             </li>
                             <li><strong>ตัดสินผล:</strong>
                                 <ul class="ml-6 list-disc">
-                                    <li><strong>Blackjack (21 แต้มจากไพ่ 2 ใบแรก):</strong> ชนะ</li>
+                                    <li><strong>Blackjack (21 แต้มจากไพ่ 2 ใบแรก):</strong> ชนะทันที</li>
                                     <li><strong>แต้มสูงกว่าเจ้ามือ แต่ไม่เกิน 21:</strong> ชนะ</li>
                                     <li><strong>แต้มเกิน 21 (Bust):</strong> แพ้</li>
                                     <li><strong>แต้มเท่ากับเจ้ามือ:</strong> เสมอ (Push)</li>
@@ -140,8 +140,8 @@
         <div v-show="startGame" class="slide-up bg-cover flex justify-center bg-center w-full h-full shadow-xl" style="background-image: url('./Image/BackGround.jpg');" >
             <div v-show="!betToStartGame" class="flex items-center">
                 <div class="max-w-sm p-6 border rounded-lg shadow-sm bg-gray-800 from-gray-800 to-black border-yellow-500">
-                    <div class="w-7 h-7 text-gray-400 mb-3">
-                        $
+                    <div class="h-7 text-gray-400 mb-3 w-full">
+                        Your Balance: ${{ player.balance }}
                     </div>
                     <div>
                         <h5 class="mb-2 text-2xl font-semibold tracking-tight text-yellow-300">How much your first bet?</h5>
@@ -152,12 +152,20 @@
                             type="number" 
                             min="1"  
                             placeholder="ใส่จำนวนเดิมพัน"
-                            class="mb-3 font-normal mr-2 px-4 py-2 slide-right text-yellow-300 bg-gradient-to-r from-gray-800 to-black border border-yellow-500 rounded-lg shadow-sm placeholder-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition duration-300 ease-in-out"/>
+                            class="mb-3 font-normal mr-2 px-4 py-2 slide-right text-yellow-300 bg-gradient-to-r from-gray-800 to-black border border-yellow-500 rounded-lg shadow-sm placeholder-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition duration-300 ease-in-out"
+                        />
+                        <button
+                        type="button"
+                            @click="bet = player.balance"
+                            class="px-6 py-3 text-lg font-bold slide-left text-red-300 bg-gradient-to-r from-black via-red-800 to-black border border-yellow-500 rounded-lg shadow-md hover:shadow-yellow-500/50 hover:bg-yellow-500 hover:text-yellow-200 hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:border-red-500 disabled:cursor-not-allowed"
+                            >
+                            ALL IN
+                        </button>
                         <button
                             type="submit"
                             class="px-6 py-3 text-lg font-bold slide-left text-yellow-300 bg-gradient-to-r from-black via-gray-800 to-black border border-yellow-500 rounded-lg shadow-md hover:shadow-yellow-500/50 hover:bg-yellow-500 hover:text-yellow-200 hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:border-red-500 disabled:cursor-not-allowed"
                             :disabled="bet > player.balance"
-                            v-text="bet > player.balance ? 'เงินไม่พอ' : '🃏เริ่มเกม🃏'">
+                            v-text="bet > player.balance ? 'Insufficient Balance' : 'Start Game'">
                         </button>
                     </form>
                 </div>
@@ -185,7 +193,7 @@
                         <h2 class="w-lg md:text-xl font-bold text-yellow-500 ">Dealer {{ dealer.handCount }}</h2>
                     </div>
                     <ul class="flex flex-wrap w-full items-center justify-center">
-                        <li class="m-0.5 md:m-2.5" v-for="card in dealer.hands" :key="card.symbols + card.number ">
+                        <li class="m-0.5 hoverzoom md:m-2.5 slide-down " v-for="card in dealer.hands" :key="card.symbols + card.number ">
                             <div :class="`w-24 h-32 md:w-40 md:h-48 border-2 border-solid border-gray-900 rounded-sm bg-white flex flex-col justify-between`">
                                 <div class="p-2"><img :src="`../Image/${card.symbols}.png`" class="w-4 md:w-7"></div>
                                 <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-5xl md:text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
@@ -193,7 +201,7 @@
                                 <div class="p-2 rotate-180"><img :src="`../Image/${card.symbols}.png`" class="w-4 md:w-7"></div>
                             </div>
                         </li>
-                        <li v-show="!DealerPlay" class="m-0.5 md:m-2.5">
+                        <li v-show="!DealerPlay" class="m-0.5 slide-down hoverzoom  md:m-2.5">
                             <div :class="`w-24 h-32 md:w-40 md:h-48 border-2 border-solid border-gray-900 rounded-sm bg-white flex items-center justify-center`">
                                 <div class="text-center text-5xl md:text-7xl" style="color:#282828;font-family: Oldenburg;"> ? </div>
                             </div>
@@ -208,7 +216,7 @@
                         <h2 class="w-lg md:text-xl font-bold text-yellow-500 ">Player {{player.handCount }} </h2>
                     </div>
                     <ul class="flex flex-wrap w-full items-center justify-center">
-                        <li class="m-0.5 md:m-2.5" v-for="card in player.hands" :key="card.symbols + card.number" >
+                        <li class="m-0.5 hoverzoom md:m-2.5 slide-up " v-for="card in player.hands" :key="card.symbols + card.number" >
                             <div :class="`w-24 h-32 md:w-40 md:h-48 border-2 border-solid border-gray-900 rounded-sm bg-white flex flex-col justify-between`">
                                 <div class="p-2"><img :src="`../Image/${card.symbols}.png`" class="w-4 md:w-7"></div>
                                 <div v-if="card.symbols=='diamond'||card.symbols=='heart'" class="text-center text-5xl md:text-7xl" style="color: #ff4d4d;font-family: Oldenburg;">{{ card.number }}</div>
@@ -236,7 +244,7 @@
                 <!-- ปุ่มควบคุม -->
                 <div v-show="!DealerPlay" class="flex items-center justify-center mt-4 gap-4 w-full">
                     <button 
-                        class="px-6 py-2 text-lg font-bold text-white bg-green-600 rounded-lg hover:bg-green-400 transition"
+                        class="px-6 hoverzoom py-2 text-lg font-bold text-white bg-green-600 rounded-lg hover:bg-green-400 transition"
                         @click="handleHit">
                         <div class="relative flex flex-col items-center">
                             <img class="size-16 p-1 drop-shadow-md" src="../Image/hit.png">
@@ -244,7 +252,7 @@
                         </div>
                     </button>
                     <button 
-                        class="px-6 py-2 text-lg font-bold text-white bg-red-600 rounded-lg hover:bg-red-400 transition"
+                        class="px-6 py-2 hoverzoom text-lg font-bold text-white bg-red-600 rounded-lg hover:bg-red-400 transition"
                         @click="handleStand">
                         <div class="relative flex flex-col items-center">
                             <img class="size-16 p-1 drop-shadow-md" src="../Image/stand.png">
@@ -252,7 +260,7 @@
                         </div>
                     </button>
                     <button 
-                        class="px-6 py-2 text-lg font-bold text-white bg-yellow-600 rounded-lg hover:bg-yellow-400 transition disabled:bg-yellow-300 disabled:cursor-not-allowed disabled:text-gray-500"
+                        class="px-6 py-2 text-lg hoverzoom font-bold text-white bg-yellow-600 rounded-lg hover:bg-yellow-400 transition disabled:bg-yellow-300 disabled:cursor-not-allowed disabled:text-gray-500"
                         v-if="bet <= player.balance"
                         @click="handleDouble">
                         <div class="relative flex flex-col items-center">
@@ -271,7 +279,7 @@
             <h2 class="text-4xl font-extrabold text-red-600">Game Over</h2>
             <p class="mt-4 text-lg text-gray-700">Your balance has reached 0</p>
             <p class="text-lg text-gray-700">Better luck next time!</p>
-            <button @click="resetGame(),clearState(),player.balance = 1000" class="px-6 py-3 my-3 bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
+            <button @click="outOfMoney" class="px-6 py-3 my-3 bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
                 ขอตังพ่อ
             </button>
         </div>
