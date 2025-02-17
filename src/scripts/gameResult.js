@@ -1,5 +1,5 @@
 import { resetGame } from './gameAction'
-import { bet,result,player,dealer, clearState } from './gameState'
+import { bet,result,player,dealer,highscore, clearState } from './gameState'
 
 export function checkScore(){
     if(dealer.value.handCount > 21){
@@ -24,13 +24,14 @@ export function checkScore(){
 }
 
 export function bestHighScore(){
-    if(localStorage.getItem('money') < player.value.balance){
-       return localStorage.setItem('money',player.value.balance)
+    if(localStorage.getItem('highscore') < player.value.balance){
+        highscore.value = player.value.balance
+        localStorage.setItem('highscore',player.value.balance)
     } 
 }
 export function outOfMoney(){
     resetGame()
     clearState()
     localStorage.removeItem("gameData");
-    player.balance = 1000
+    player.value.balance = 1000
 }

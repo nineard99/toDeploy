@@ -1,13 +1,14 @@
 <script setup>
     import { onMounted} from 'vue'
-    import {  startGame, betToStartGame,bet,DealerPlay,continueGame,result,player,dealer ,howToPlay} from './scripts/gameState'
+    import {highscore,  startGame, betToStartGame,bet,DealerPlay,continueGame,result,player,dealer ,howToPlay} from './scripts/gameState'
     import {loadGameData } from './scripts/storage'
     import { handleBetStartGame,handleHit, handleStand, handleDouble, resetGame} from './scripts/gameAction'
-    import {outOfMoney} from './scripts/gameResult'
+    import { outOfMoney } from './scripts/gameResult';
 
     //USE WHEN WEB RELOAD
     onMounted(() => {
         if(localStorage.getItem('gameData')) continueGame.value = true
+        if(localStorage.getItem('highscore')) highscore.value = localStorage.getItem('highscore')
     })
 
     
@@ -22,7 +23,7 @@
                     ♠️ BLACKJACK ♦️
                 </p>
                 <p class="text-2xl font-bold text-yellow-200 drop-shadow-md mt-3">
-                    High Score: <span class="text-white">{{player.highscore}}</span>
+                    High Score: <span class="text-white">{{ highscore }}</span>
                 </p>
             </div>
 

@@ -8,10 +8,11 @@ export const continueGame = ref(false)
 export const HiddenCardDealer = ref({})
 export const result = ref("")
 export const howToPlay=ref(false)
+//
+export const highscore = ref(0)
 
 export const player = ref({
     balance: 1000,
-    highScore: localStorage.getItem('money') ,
     hands: [],
     handCount: 0,
     winStreak: 0
