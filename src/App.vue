@@ -121,18 +121,16 @@
                 <div class="flex items-center space-x-6 text-white md:order-2">
                     
                     <!-- Money -->
-                    <div class="flex items-center gap-2">
-                        <span class="w-6 h-6 text-2xl" > 💰</span>
-                        <span class="text-lg font-semibold text-yellow-300">
-                            <span class="text-sm text-gray-400">Your Balance:</span> ${{ player.balance }}
+                    <div class="flex items-center px-4 py-1 gap-2 hoverzoom rounded-full border border-yellow-500/30 backdrop-blur">
+                        <span class="text-lg font-semibold text-center text-yellow-300">
+                            <span class="text-sm text-gray-400">💰Your Balance:</span> ${{ player.balance }}
                         </span>
                     </div>
-
+                
                     <!-- WinStreak -->
-                    <div class="flex items-center gap-2">
-                        <span class="w-6 h-6 text-2xl" > 🔥 </span>
-                        <span class="text-lg font-semibold text-green-400">
-                            <span class="text-sm text-gray-400">WinStreak:</span> {{ player.winStreak }}
+                    <div class="flex items-center px-4 py-1 gap-2 rounded-full hoverzoom border border-yellow-500/30 backdrop-blur">
+                        <span class="text-lg font-semibold text-center text-green-400">
+                            <span class="text-sm text-gray-400">🔥WinStreak:</span> {{ player.winStreak }}
                         </span>
                     </div>
                 </div>
@@ -140,7 +138,7 @@
         </nav>
 
         <!-- StartGame Table -->
-        <div v-show="startGame" class="slide-up bg-cover flex justify-center bg-center w-full h-full shadow-xl" style="background-image: url('./Image/BackGround.jpg');" >
+        <div v-show="startGame" class="slide-up bg-cover flex pt-20 justify-center bg-center w-full h-full shadow-xl" style="background-image: url('./Image/BackGround.jpg');" >
             <div v-show="!betToStartGame" class="flex items-center md:scale-150">
                 <div class="max-w-md md:w-[20rem] p-6 border-2 rounded-lg shadow-lg bg-gray-900 border-yellow-500">
                     <div class="text-gray-300 text-lg font-semibold mb-4">Your Balance: <span class="text-yellow-400">${{ player.balance }}</span></div>
@@ -230,9 +228,9 @@
             </div>
         </div>        
         <!-- footer -->
-        <div v-show="betToStartGame" class="relative bg-green-500">
-            <div class="absolute bottom-20 left-5 text-white p-4 bg-black/40 rounded-lg shadow-xl border-2 border-yellow-500">
-                <p class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]">
+        <div v-show="betToStartGame" class="relative bg-green-500 bottom-10 sm:bottom-0 ">
+            <div class="absolute hoverzoom bottom-20 left-5 text-white p-4 bg-black/40 rounded-lg shadow-xl border-2 border-yellow-500">
+                <p class="text-4xl  font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]">
                     ${{ bet }}
                 </p>
                 <p class="text-2xl font-black tracking-[0.15em] text-yellow-300 drop-shadow-md uppercase">
