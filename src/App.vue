@@ -17,11 +17,13 @@
 <template>
     <div class="w-full bg-gray-800">
         <!-- Before StartGame -->
-        <div v-show="!startGame" class="h-screen flex flex-col justify-center items-center bg-gradient-to-b from-black to-green-900">
-            <div class="text-center mb-6">
-                <p class="text-5xl animate-pulse  font-extrabold text-yellow-400 tracking-wider drop-shadow-lg neon-text">
-                    ♠️ BLACKJACK ♦️
-                </p>
+        <div v-show="!startGame" class="h-screen  flex flex-col justify-center items-center bg-gradient-to-b from-black to-green-900">
+            
+            <div class="text-center slide-down mb-6">
+                    <p class="text-5xl animate-pulse   font-extrabold text-yellow-400 tracking-wider drop-shadow-lg neon-text">
+                        ♠️ BLACKJACK ♦️
+                    </p>
+                
                 <p class="text-2xl font-bold text-yellow-200 drop-shadow-md mt-3">
                     High Score: <span class="text-white">{{ highscore }}</span>
                 </p>
@@ -30,22 +32,22 @@
             <div class="flex gap-6">
                 <button 
                     @click="startGame = true"
-                    class="px-6 py-3 bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
-                    🎲 PLAY GAME
+                    class="px-6 py-3 slide-right bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
+                    🎲 NEW GAME
                 </button>
                 <button
                     v-show="continueGame"
                     @click="loadGameData"
-                    class="px-6 py-3 bg-yellow-600 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-500 hover:scale-105 transition-all transform duration-200">
-                    🔄 CONTINUE
+                    class="px-6 py-3 slide-left bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-500 hover:scale-105 transition-all transform duration-200">
+                    CONTINUE
                 </button>
             </div>
-            <button @click="howToPlay =!howToPlay" type="button" class="m-4 text-sm p-2.5 text-center inline-flex items-center bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
-                <span class="h-4"> How to play ? </span>
+            <button @click="howToPlay =!howToPlay" type="button" class="m-4 slide-left text-sm p-2.5 text-center inline-flex items-center bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
+                <span class="h-7 text-xl"> How to play ? </span>
             </button>
         </div>
 
-        <div v-show="howToPlay" class="overflow-hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full p-4">
+        <div v-show="howToPlay" class="overflow-hidden fade-in fixed inset-0 z-50 flex justify-center items-center w-full h-full p-4">
             <div class="relative p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
                 <div class="relative bg-white rounded-lg shadow-lg">
                     <button @click="howToPlay =!howToPlay " type="button" class="absolute top-4 right-4 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-10 h-10 flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
@@ -139,37 +141,35 @@
 
         <!-- StartGame Table -->
         <div v-show="startGame" class="slide-up bg-cover flex justify-center bg-center w-full h-full shadow-xl" style="background-image: url('./Image/BackGround.jpg');" >
-            <div v-show="!betToStartGame" class="flex items-center">
-                <div class="max-w-sm p-6 border rounded-lg shadow-sm bg-gray-800 from-gray-800 to-black border-yellow-500">
-                    <div class="h-7 text-gray-400 mb-3 w-full">
-                        Your Balance: ${{ player.balance }}
-                    </div>
-                    <div>
-                        <h5 class="mb-2 text-2xl font-semibold tracking-tight text-yellow-300">How much your first bet?</h5>
-                    </div>
-                    <form @submit.prevent="handleBetStartGame">
+            <div v-show="!betToStartGame" class="flex items-center md:scale-150">
+                <div class="max-w-md md:w-[20rem] p-6 border-2 rounded-lg shadow-lg bg-gray-900 border-yellow-500">
+                    <div class="text-gray-300 text-lg font-semibold mb-4">Your Balance: <span class="text-yellow-400">${{ player.balance }}</span></div>
+                    <h2 class="mb-4 text-2xl font-bold text-yellow-300">Place Your First Bet</h2>
+                    
+                    <form @submit.prevent="handleBetStartGame" class="space-y-4">
                         <input 
-                            v-model="bet" 
-                            type="number" 
-                            min="1"  
-                            placeholder="ใส่จำนวนเดิมพัน"
-                            class="mb-3 font-normal mr-2 px-4 py-2 slide-right text-yellow-300 bg-gradient-to-r from-gray-800 to-black border border-yellow-500 rounded-lg shadow-sm placeholder-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition duration-300 ease-in-out"
+                        v-model="bet" 
+                        type="number" 
+                        min="1" 
+                        placeholder="Enter Bet Amount"
+                        class="w-full px-4 py-2 text-yellow-300 bg-gray-800 border border-yellow-500 rounded-lg shadow-sm placeholder-yellow-500 focus:ring-2 focus:ring-yellow-500 focus:outline-none transition duration-300 ease-in-out"
                         />
+                        
+                        <div class="grid grid-cols-3 gap-2">
+                            <button type="button" @click="bet = player.balance" class="casino-btn ">ALL IN</button>
+                            <button type="button" @click="bet = Math.round(player.balance / 2)" class="casino-btn" v-text="Math.round(player.balance / 2)"></button>
+                            <button type="button" @click="bet = Math.round(player.balance / 5)" class="casino-btn" v-text="Math.round(player.balance / 5)"></button>
+                        </div>
+                        
                         <button
-                        type="button"
-                            @click="bet = player.balance"
-                            class="px-6 py-3 text-lg font-bold slide-left text-red-300 bg-gradient-to-r from-black via-red-800 to-black border border-yellow-500 rounded-lg shadow-md hover:shadow-yellow-500/50 hover:bg-yellow-500 hover:text-yellow-200 hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:border-red-500 disabled:cursor-not-allowed"
-                            >
-                            ALL IN
-                        </button>
-                        <button
-                            type="submit"
-                            class="px-6 py-3 text-lg font-bold slide-left text-yellow-300 bg-gradient-to-r from-black via-gray-800 to-black border border-yellow-500 rounded-lg shadow-md hover:shadow-yellow-500/50 hover:bg-yellow-500 hover:text-yellow-200 hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:border-red-500 disabled:cursor-not-allowed"
-                            :disabled="bet > player.balance"
-                            v-text="bet > player.balance ? 'Insufficient Balance' : 'Start Game'">
+                        type="submit"
+                        class="casino-btn w-full h-10"
+                        :disabled="bet > player.balance"
+                        >
+                        {{ bet > player.balance ? 'Insufficient Balance' : 'Start Gambling' }}
                         </button>
                     </form>
-                </div>
+                    </div>
             </div>
 
             <div v-show="betToStartGame">
@@ -275,13 +275,13 @@
         </div>    
     </div>
 
-    <div v-if="result === 'You Lose' && player.balance === 0" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-70">
+    <div v-if="result === 'You Lose' && player.balance === 0" class="fixed fade-in inset-0 flex items-center justify-center bg-gray-900 bg-opacity-70">
         <div class="bg-white p-12 rounded-2xl shadow-2xl w-[500px] max-w-full text-center">
             <h2 class="text-4xl font-extrabold text-red-600">Game Over</h2>
             <p class="mt-4 text-lg text-gray-700">Your balance has reached 0</p>
             <p class="text-lg text-gray-700">Better luck next time!</p>
             <button @click="outOfMoney" class="px-6 py-3 my-3 bg-yellow-500 text-black font-bold rounded-xl shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all transform duration-200">
-                ขอตังพ่อ
+                Retry
             </button>
         </div>
     </div>
