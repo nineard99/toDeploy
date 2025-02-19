@@ -6,16 +6,13 @@ import {checkScore,bestHighScore} from './gameResult'
 
 export const handleBetStartGame = (event) => {
     event.preventDefault()
-    console.log(bet.value)
     betToStartGame.value = true;
     player.value.balance -= bet.value
-    console.log(player.balance)
     addCardToHand(player)
     addCardToHand(player)
     addCardToHand(dealer)
     addCardToHand(dealer)
     HiddenCardDealer.value = dealer.value.hands.pop()
-    console.log(HiddenCardDealer)
     countHand(player)
     countHand(dealer)
     saveGameData()

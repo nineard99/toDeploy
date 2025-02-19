@@ -13,6 +13,7 @@
 
     
 </script>
+
 <template>
     <div class="w-full bg-gray-800">
         <!-- Before StartGame -->
@@ -104,11 +105,11 @@
     </div>
     
     <div v-show="startGame" class="h-screen bg-gray-800 overflow-hidden">
-        <nav class="bg-gradient-to-b from-black to-gray-900 text-white px-2 md:py-4 md:px-6 border-b-4 border-yellow-600 shadow-lg">
+        <nav class="bg-gradient-to-b from-black to-gray-900 text-white py-4 px-6 border-b-4 border-yellow-600 shadow-lg">
             <div class="max-w-screen-xl mx-auto flex items-center justify-between">
                 
                 <div class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <span class="self-center text-xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 drop-shadow-[0_0_10px_rgba(255,215,0,0.9)]">
+                    <span class="self-center text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 drop-shadow-[0_0_10px_rgba(255,215,0,0.9)]">
                         PeePhanan
                     </span>
                 </div>
@@ -121,15 +122,15 @@
                     
                     <!-- Money -->
                     <div class="flex items-center px-4 py-1 gap-2 hoverzoom rounded-full border border-yellow-500/30 backdrop-blur">
-                        <span class="text-sm md:text-lg font-semibold text-center text-yellow-300">
-                            <span class="text-xs md:text-sm text-gray-400">💰Your Balance:</span> ${{ player.balance }}
+                        <span class="text-lg font-semibold text-center text-yellow-300">
+                            <span class="text-sm text-gray-400">💰Your Balance:</span> ${{ player.balance }}
                         </span>
                     </div>
                 
                     <!-- WinStreak -->
                     <div class="flex items-center px-4 py-1 gap-2 rounded-full hoverzoom border border-yellow-500/30 backdrop-blur">
-                        <span class="text-sm md:text-lg font-semibold text-center text-green-400">
-                            <span class="text-xs md:text-sm text-gray-400">🔥WinStreak:</span> {{ player.winStreak }}
+                        <span class="text-lg font-semibold text-center text-green-400">
+                            <span class="text-sm text-gray-400">🔥WinStreak:</span> {{ player.winStreak }}
                         </span>
                     </div>
                 </div>
@@ -137,7 +138,7 @@
         </nav>
 
         <!-- StartGame Table -->
-        <div v-show="startGame" class="slide-up bg-cover flex pt-20 justify-center bg-center w-full h-full shadow-xl" style="background-image: url('./Image/BackGround.jpg');" >
+        <div v-show="startGame" class="slide-up bg-cover flex pt-20 justify-center bg-center w-full h-full shadow-xl" style="background-image: url('src/assets/BackGround.jpg');" >
             <div v-show="!betToStartGame" class="flex items-center md:scale-150">
                 <div class="max-w-md md:w-[20rem] p-6 border-2 rounded-lg shadow-lg bg-gray-900 border-yellow-500">
                     <div class="text-gray-300 text-lg font-semibold mb-4">Your Balance: <span class="text-yellow-400">${{ player.balance }}</span></div>
@@ -169,15 +170,23 @@
                     </div>
             </div>
 
-            <div v-show="betToStartGame" class="md:-m-10"> 
-                <div class="-mt-[4.5rem] md:hidden hoverzoom  text-white p-2 bg-black/40 rounded-lg shadow-xl border-2 border-yellow-500">
-                    <p class="text-xl  font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]">
-                        ${{ bet }}
-                    </p>
-                    <p class="text-xl font-black tracking-[0.15em] text-yellow-300 drop-shadow-md uppercase">
-                        TOTAL BET
-                    </p>
-                </div>  
+            <div v-show="betToStartGame">
+                <div v-show="result.length > 0" class="mb-2 mt-6 text-3xl font-bold tracking-wide text-red-400 
+                            bg-gradient-to-b from-yellow-300 to-yellow-500 
+                            shadow-lg shadow-yellow-500/50 
+                            border-2 border-yellow-500 
+                            px-6 py-3 rounded-lg">
+                    <div class="flex justify-between items-center">
+                        {{ result }}
+                        <button
+                            type="submit"
+                            class="px-6 py-3 text-lg font-bold slide-left text-yellow-300 bg-gradient-to-r from-black via-gray-800 to-black border border-yellow-500 rounded-lg shadow-md hover:shadow-yellow-500/50 hover:bg-yellow-500 hover:text-yellow-200 hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:border-red-500 disabled:cursor-not-allowed"
+                            v-text="'Retry'"
+                            @click="resetGame">
+                        </button>
+                    </div>
+                </div>    
+
                 <div class="flex-1 flex flex-col items-center justify-center">
                     <div class="px-4 py-1 mt-3 hoverzoom w-[9rem] flex slide-left justify-center bg-black/50 rounded-full border border-yellow-500/30 backdrop-blur">
                         <h2 class="w-lg md:text-xl font-bold text-yellow-500 ">Dealer {{ dealer.handCount }}</h2>
@@ -201,21 +210,6 @@
                 </div>
                 <div class="w-full h-1 bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent"></div>
                 
-                <div v-show="result.length > 0" class="mb-2 mt-6 text-3xl font-bold tracking-wide text-red-400 
-                            bg-gradient-to-b from-yellow-300 to-yellow-500 
-                            shadow-lg shadow-yellow-500/50 
-                            border-2 border-yellow-500 
-                            px-6 py-3 rounded-lg">
-                    <div class="flex justify-between items-center">
-                        {{ result }}
-                        <button
-                            type="submit"
-                            class="px-6 py-3 text-lg font-bold slide-left text-yellow-300 bg-gradient-to-r from-black via-gray-800 to-black border border-yellow-500 rounded-lg shadow-md hover:shadow-yellow-500/50 hover:bg-yellow-500 hover:text-yellow-200 hover:scale-105 transition duration-300 ease-in-out disabled:opacity-50 disabled:border-red-500 disabled:cursor-not-allowed"
-                            v-text="'Retry'"
-                            @click="resetGame">
-                        </button>
-                    </div>
-                </div>   
                 <div class="flex-1 flex flex-col items-center justify-center">
                     <div class="px-4 py-1 hoverzoom w-[9rem] mt-3 flex justify-center bg-black/50 rounded-full border border-yellow-500/30 backdrop-blur slide-right">
                         <h2 class="w-lg md:text-xl font-bold text-yellow-500 ">Player {{player.handCount }} </h2>
@@ -235,7 +229,7 @@
         </div>        
         <!-- footer -->
         <div v-show="betToStartGame" class="relative bg-green-500 bottom-10 sm:bottom-0 ">
-            <div class="absolute hidden md:block hoverzoom bottom-20 left-5 text-white p-4 bg-black/40 rounded-lg shadow-xl border-2 border-yellow-500">
+            <div class="absolute hoverzoom bottom-20 left-5 text-white p-4 bg-black/40 rounded-lg shadow-xl border-2 border-yellow-500">
                 <p class="text-4xl  font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]">
                     ${{ bet }}
                 </p>
@@ -243,15 +237,16 @@
                     TOTAL BET
                 </p>
             </div>
+
             
-            <div class="absolute bottom-20 left-5 sm:left-0 right-5 text-white">
+            <div class="absolute bottom-20 right-5 text-white">
                 <!-- ปุ่มควบคุม -->
                 <div v-show="!DealerPlay" class="flex items-center justify-center mt-4 gap-4 w-full">
                     <button 
                         class="px-6 hoverzoom py-2 text-lg font-bold text-white bg-green-600 rounded-lg hover:bg-green-400 transition"
                         @click="handleHit">
                         <div class="relative flex flex-col items-center">
-                            <img class="size-16 p-1 drop-shadow-md" src="../Image/hit.png">
+                            <img class="size-16 p-1 drop-shadow-md" src="./assets/hit.png">
                             <span class="text-sm font-bold absolute bottom-[-18px] bg-green-500 text-white px-3 py-1 rounded-lg shadow-md border border-green-700">Hit</span>
                         </div>
                     </button>
@@ -259,7 +254,7 @@
                         class="px-6 py-2 hoverzoom text-lg font-bold text-white bg-red-600 rounded-lg hover:bg-red-400 transition"
                         @click="handleStand">
                         <div class="relative flex flex-col items-center">
-                            <img class="size-16 p-1 drop-shadow-md" src="../Image/stand.png">
+                            <img class="size-16 p-1 drop-shadow-md" src="./assets/stand.png">
                             <span class="text-sm font-bold absolute bottom-[-18px] bg-red-500 text-white px-3 py-1 rounded-lg shadow-md border border-green-700">Stand</span>
                         </div>
                     </button>
@@ -268,7 +263,7 @@
                         v-if="bet <= player.balance && doublePlay"
                         @click="handleDouble">
                         <div class="relative flex flex-col items-center">
-                            <img class="size-16 p-1 drop-shadow-md" src="../Image/double.png">
+                            <img class="size-16 p-1 drop-shadow-md" src="./assets/double.png">
                             <span class="text-sm font-bold absolute bottom-[-18px] bg-yellow-500 text-white px-3 py-1 rounded-lg shadow-md border border-green-700">Double</span>
                         </div>
                     </button>
