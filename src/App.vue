@@ -1,6 +1,6 @@
 <script setup>
     import { onMounted} from 'vue'
-    import {highscore,  startGame, betToStartGame,bet,DealerPlay,continueGame,result,player,dealer ,howToPlay} from './scripts/gameState'
+    import {highscore,doublePlay,  startGame, betToStartGame,bet,DealerPlay,continueGame,result,player,dealer ,howToPlay} from './scripts/gameState'
     import {loadGameData } from './scripts/storage'
     import { handleBetStartGame,handleHit, handleStand, handleDouble, resetGame} from './scripts/gameAction'
     import { outOfMoney } from './scripts/gameResult';
@@ -260,7 +260,7 @@
                     </button>
                     <button 
                         class="px-6 py-2 text-lg hoverzoom font-bold text-white bg-yellow-600 rounded-lg hover:bg-yellow-400 transition disabled:bg-yellow-300 disabled:cursor-not-allowed disabled:text-gray-500"
-                        v-if="bet <= player.balance"
+                        v-if="bet <= player.balance && doublePlay"
                         @click="handleDouble">
                         <div class="relative flex flex-col items-center">
                             <img class="size-16 p-1 drop-shadow-md" src="../Image/double.png">

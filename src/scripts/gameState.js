@@ -8,6 +8,7 @@ export const continueGame = ref(false)
 export const HiddenCardDealer = ref({})
 export const result = ref("")
 export const howToPlay=ref(false)
+export const doublePlay = ref(true)
 //
 export const highscore = ref(0)
 
