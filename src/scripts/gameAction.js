@@ -70,6 +70,8 @@ export function resetGame(){
     result.value = ""
     betToStartGame.value =false
     DealerPlay.value=false
+    doublePlay.value =true
+
 }
 
 function dealerControll() {
